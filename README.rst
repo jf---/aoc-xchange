@@ -1,0 +1,72 @@
+.. -*- coding: utf-8 -*-
+
+aoc-xchange
+===========
+
+.. image:: http://img.shields.io/badge/Status-development-ff3300.svg
+   :alt: Development
+.. image:: https://img.shields.io/pypi/dm/aocxchange.svg
+   :alt: Downloads
+.. image:: https://travis-ci.org/floatingpointstack/aoc-xchange.svg
+   :alt: Build Status
+.. image:: https://coveralls.io/repos/floatingpointstack/aoc-xchange/badge.svg?branch=master&service=github
+   :alt: Coverage Status
+.. image:: http://img.shields.io/badge/license-GPL_v3-blue.svg
+   :target: https://www.gnu.org/copyleft/gpl.html
+   :alt: GPL v3
+.. image:: http://img.shields.io/badge/Python-2.7_3.*-ff3366.svg
+   :target: https://www.python.org/downloads/
+   :alt: Python 2.7 3.*
+
+The **aoc-xchange** project provides a Python package named **aocxchange** to read and write
+from/to CAD files using `PythonOCC <http://github.com/tpaviot/pythonocc-core>`_.
+
+PythonOCC is a set of Python wrappers for the OpenCascade Community Edition (an industrial strength 3D CAD modeling kernel)
+
+install
+-------
+
+.. code-block:: bash
+
+  pip install aocxchange
+
+Dependencies
+~~~~~~~~~~~~
+
+*aocxchange* depends on OCC >=0.16 and occutils. The examples require wx>=2.8 (or another backend (minor code modifications required)).
+Please see the table below for instructions on how to satisfy the requirements.
+
++----------+----------+----------------------------------------------------------------------------+
+| package  | version  | Comment                                                                    |
++==========+==========+============================================================================+
+| OCC      | >=0.16.  | | See pythonocc.org or github.com.tpaviot/pythonocc-core for instructions  |
+|          |          | | or `conda install -c https://conda.anaconda.org/dlr-sc pythonocc-core`   |
++----------+----------+----------------------------------------------------------------------------+
+| aocutils | latest   | `pip install aocutils`                                                     |
++----------+----------+----------------------------------------------------------------------------+
+| wx       | >=2.8    | See wxpython.org for instructions                                          |
++----------+----------+----------------------------------------------------------------------------+
+
+Goal
+----
+
+The goal of the **aocxchange** package is to simplify the read/write of CAD files using PythonOCC.
+
+Versions
+--------
+
+occdataexchange version and target PythonOCC version
+
++--------------------+-------------------+
+| aocxchange version | PythonOCC version |
++====================+===================+
+| 0.1.*              | 0.16.2            |
++--------------------+-------------------+
+
+Examples
+--------
+
+The examples are in the *examples* folder at the Github repository (https://github.com/floatingpointstack/aoc-xchange).
+
+The wx backend (wxPython) backend is used for the examples that display a UI.
+You may easily change this behaviour to use pyqt4 or PySide by changing the backend in the call to init_display().
