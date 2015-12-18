@@ -54,6 +54,7 @@ def test_stl_importer_happy_topology():
     topo = aocutils.topology.Topo(importer.shape, return_iter=False)
     # assert len(topo.solids()) == 1
     assert len(topo.shells()) == 1
+    assert topo.shells()[0].Closed() is True
     assert len(topo.faces()) == 108
     assert len(topo.edges()) == 162
 
@@ -62,6 +63,7 @@ def test_stl_importer_happy_topology():
     topo = aocutils.topology.Topo(importer.shape, return_iter=False)
     # assert len(topo.solids()) == 1
     assert len(topo.shells()) == 1
+    assert topo.shells()[0].Closed() is True
     assert len(topo.faces()) == 108
     assert len(topo.edges()) == 162
 
@@ -80,6 +82,8 @@ def test_stl_importer_2_boxes():
     topo = aocutils.topology.Topo(importer.shape, return_iter=False)
     # assert len(topo.solids()) == 2
     assert len(topo.shells()) == 2
+    assert topo.shells()[0].Closed() is True
+    assert topo.shells()[1].Closed() is True
     assert topo.number_of_faces() == 108 * 2
     assert topo.number_of_edges() == 162 * 2
 
@@ -89,5 +93,7 @@ def test_stl_importer_2_boxes():
     topo = aocutils.topology.Topo(importer.shape, return_iter=False)
     # assert len(topo.solids()) == 2
     assert len(topo.shells()) == 2
+    assert topo.shells()[0].Closed() is True
+    assert topo.shells()[1].Closed() is True
     assert topo.number_of_faces() == 108 * 2
     assert topo.number_of_edges() == 162 * 2
