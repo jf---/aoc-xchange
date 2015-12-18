@@ -1,15 +1,21 @@
 #!/usr/bin/python
 # coding: utf-8
 
-r"""STL module of occaddons.dataexchange"""
+r"""STL module of aocxchange"""
 
 from __future__ import print_function
 
 import os
 import warnings
+import logging
 
 import OCC.StlAPI
 import OCC.TopoDS
+
+import aocxchange.exceptions
+import aocxchange.extensions
+
+logger = logging.getLogger(__name__)
 
 
 class StlImporter(object):
@@ -21,32 +27,35 @@ class StlImporter(object):
 
     """
     def __init__(self, filename):
-        self.set_filename(filename)
+        logger.info("StlImporter instantiated with filename : %s" % filename)
+
+        # filename checks
+        if not os.path.isfile(filename):
+            msg = "StlImporter error: file %s not found." % filename
+            logger.error(msg)
+            raise aocxchange.exceptions.FileNotFoundException(msg)
+        elif aocxchange.utils.extract_file_extension(filename).lower() not in \
+                aocxchange.extensions.stl_extensions:
+            msg = "Accepted extensions are %s" % str(aocxchange.extensions.stl_extensions)
+            logger.error(msg)
+            raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
+        else:
+            logger.info("Filename passed existence and extension checks")
+            self._filename = filename
         self._shape = None
 
-    def set_filename(self, filename):
-        r"""Filename setter
-
-        Parameters
-        ----------
-        filename
-
-        """
-        if not os.path.isfile(filename):
-            print("StepImporter initialization Error: file %s not found." % filename)
-            self._filename = None
-        else:
-            self._filename = filename
+        self.read_file()
 
     def read_file(self):
         r"""Read the STL file and stores the result in a TopoDS_Shape"""
         stl_reader = OCC.StlAPI.StlAPI_Reader()
-        shp = OCC.TopoDS.TopoDS_Shape()
-        stl_reader.Read(shp, self._filename)
-        self._shape = shp
+        shape = OCC.TopoDS.TopoDS_Shape()
+        stl_reader.Read(shape, self._filename)
+        self._shape = shape
 
-    def get_shape(self):
-        r"""Shape getter"""
+    @property
+    def shape(self):
+        r"""Shape"""
         if self._shape.IsNull():
             raise AssertionError("Error: the shape is NULL")
         else:

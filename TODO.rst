@@ -1,6 +1,6 @@
 
-dataexchange
-------------
+tests
+-----
 tests
     include tests with different geometries (open shell, curves etc ...)
 roundtrip (open file and save it -> check everything is ok (colors, layers etc ...)
@@ -22,3 +22,9 @@ step
 ----
 
 extract topology in importer: solids, shells based on shapes list content
+
+issues
+------
+
+importing iges box -> 24 edges
+importing step box -> 12 edges
