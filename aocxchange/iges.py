@@ -27,82 +27,6 @@ import aocutils.topology
 logger = logging.getLogger(__name__)
 
 
-class IgesExporter(object):
-    r"""IGES exporter
-
-    Parameters
-    ----------
-    filename : str
-    format : ["5.1", "5.3"]
-
-    """
-    def __init__(self, filename, format="5.1"):
-        # Format should be "5.1" or "5.3"
-
-        if format not in ["5.1", "5.3"]:
-            msg = "Unsupported IGES format"
-            logger.error(msg)
-            raise aocxchange.exceptions.IgesUnknownFormatException(msg)
-
-        if not os.path.isdir(os.path.dirname(filename)):
-            msg = "Output directory does not exist"
-            logger.error(msg)
-            raise aocxchange.exceptions.DirectoryNotFoundException(msg)
-
-        if aocxchange.utils.extract_file_extension(filename).lower() not in \
-                aocxchange.extensions.iges_extensions:
-            msg = "Accepted extensions are iges and igs"
-            logger.error(msg)
-            raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
-
-        self._shapes = []
-        self._filename = filename
-        if format == "5.3":
-            self._brepmode = True
-        else:
-            self._brepmode = False
-
-    def add_shape(self, a_shape):
-        r"""Add shape
-
-        Parameters
-        ----------
-        a_shape : TopoDS_Shape or subclass
-
-        """
-        if not isinstance(a_shape, OCC.TopoDS.TopoDS_Shape) and not issubclass(a_shape.__class__,
-                                                                               OCC.TopoDS.TopoDS_Shape):
-            msg = "Expecting a TopoDS_Shape or subclass, got a %s" % a_shape.__class__
-            logger.error(msg)
-            raise ValueError(msg)
-
-        # First check the shape
-        if a_shape.IsNull():
-            msg = "IgesExporter Error: the shape is NULL"
-            logger.error(msg)
-            raise ValueError(msg)
-        else:
-            self._shapes.append(a_shape)
-
-    def write_file(self):
-        r"""Write file
-
-        Returns
-        -------
-        bool
-
-        """
-        OCC.IGESControl.IGESControl_Controller().Init()
-        iges_writer = OCC.IGESControl.IGESControl_Writer("write.iges.unit", self._brepmode)
-        for shape in self._shapes:
-            iges_writer.AddShape(shape)
-        iges_writer.ComputeModel()
-        if iges_writer.Write(self._filename):
-            return True
-        else:
-            return False
-
-
 class IgesImporter(object):
     r"""IGES importer
 
@@ -259,3 +183,80 @@ class IgesImporter(object):
 
         """
         return self._shapes
+
+
+class IgesExporter(object):
+    r"""IGES exporter
+
+    Parameters
+    ----------
+    filename : str
+    format : ["5.1", "5.3"]
+
+    """
+    def __init__(self, filename, format="5.1"):
+        # Format should be "5.1" or "5.3"
+
+        if format not in ["5.1", "5.3"]:
+            msg = "Unsupported IGES format"
+            logger.error(msg)
+            raise aocxchange.exceptions.IgesUnknownFormatException(msg)
+
+        if not os.path.isdir(os.path.dirname(filename)):
+            msg = "Output directory does not exist"
+            logger.error(msg)
+            raise aocxchange.exceptions.DirectoryNotFoundException(msg)
+
+        if aocxchange.utils.extract_file_extension(filename).lower() not in \
+                aocxchange.extensions.iges_extensions:
+            msg = "Accepted extensions are %s" % str(aocxchange.extensions.iges_extensions)
+            logger.error(msg)
+            raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
+
+        self._shapes = []
+        self._filename = filename
+        if format == "5.3":
+            self._brepmode = True
+        else:
+            self._brepmode = False
+
+    def add_shape(self, a_shape):
+        r"""Add shape
+
+        Parameters
+        ----------
+        a_shape : TopoDS_Shape or subclass
+
+        """
+        if not isinstance(a_shape, OCC.TopoDS.TopoDS_Shape) and not issubclass(a_shape.__class__,
+                                                                               OCC.TopoDS.TopoDS_Shape):
+            msg = "Expecting a TopoDS_Shape or subclass, got a %s" % a_shape.__class__
+            logger.error(msg)
+            raise ValueError(msg)
+
+        if a_shape.IsNull():
+            msg = "IgesExporter Error: the shape is NULL"
+            logger.error(msg)
+            raise ValueError(msg)
+        else:
+            self._shapes.append(a_shape)
+
+    def write_file(self):
+        r"""Write file
+
+        Returns
+        -------
+        bool
+
+        """
+        OCC.IGESControl.IGESControl_Controller().Init()
+        iges_writer = OCC.IGESControl.IGESControl_Writer("write.iges.unit", self._brepmode)
+        for shape in self._shapes:
+            iges_writer.AddShape(shape)
+        iges_writer.ComputeModel()
+        if iges_writer.Write(self._filename):
+            return True
+        else:
+            return False
+
+

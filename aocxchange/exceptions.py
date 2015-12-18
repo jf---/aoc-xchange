@@ -41,6 +41,11 @@ class FileReadException(AocXChangeException):
     pass
 
 
+class FileWriteException(AocXChangeException):
+    r"""Something went wrong while writing a file"""
+    pass
+
+
 # IGES Specific
 
 
@@ -58,5 +63,20 @@ class IgesUnknownFormatException(AocXChangeException):
 
 
 class StepFileReadException(FileReadException):
-    r"""Something wrent wrong while reading a STEP file"""
+    r"""Something went wrong while reading a STEP file"""
+    pass
+
+
+class StepUnknownSchemaException(AocXChangeException):
+    r"""The STEP schema is not AP203 or AP214CD"""
+    pass
+
+
+class StepFileWriteException(FileWriteException):
+    r"""The STEP format s not AP203 or AP214CD"""
+    pass
+
+
+class StepShapeTransferException(FileWriteException):
+    r"""A shape could not be transfered to the STEP writer"""
     pass

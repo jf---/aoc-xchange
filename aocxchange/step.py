@@ -144,67 +144,79 @@ class StepExporter(object):
 
     Parameters
     ----------
-    filename:
+    filename : str
         the file to save to eg. myshape.step
-    verbose:
+    verbose : bool
         verbosity of the STEP exporter
-    schema:
+    schema : ["AP203", "AP214CD"]
         which STEP schema to use, either AP214CD or AP203
+    tolerance : float
 
     """
-    def __init__(self, filename, verbose=False, schema='AP214CD'):
-        self._shapes = []
+    def __init__(self, filename, verbose=False, schema="AP214CD", tolerance=1e-4):
+
+        if schema not in ["AP203", "AP214CD"]:
+            msg = "Unsupported STEP schema"
+            logger.error(msg)
+            raise aocxchange.exceptions.StepUnknownSchemaException(msg)
+
+        if not os.path.isdir(os.path.dirname(filename)):
+            msg = "Output directory does not exist"
+            logger.error(msg)
+            raise aocxchange.exceptions.DirectoryNotFoundException(msg)
+
+        if aocxchange.utils.extract_file_extension(filename).lower() not in \
+                aocxchange.extensions.step_extensions:
+            msg = "Accepted extensions are %s" % str(aocxchange.extensions.step_extensions)
+            logger.error(msg)
+            raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
+
+        self._shapes = list()
         self.verbose = verbose
         self._filename = filename
-        self.stepWriter = OCC.STEPControl.STEPControl_Writer()
-        if schema not in ['AP203', 'AP214CD']:
-            raise AssertionError('The schema string argument must be either "AP203" or "AP214CD"')
-        else:
-            OCC.Interface.Interface_Static_SetCVal("write.step.schema", schema)
+        self._stepcontrol_writer = OCC.STEPControl.STEPControl_Writer()
+        self._stepcontrol_writer.SetTolerance(tolerance)
 
-    def set_tolerance(self, tolerance=0.0001):
-        r"""Set the tolerance of the STEP writer
-
-        Parameters
-        ----------
-        tolerance : float
-        """
-        self.stepWriter.SetTolerance(tolerance)
+        OCC.Interface.Interface_Static_SetCVal("write.step.schema", schema)
 
     def add_shape(self, a_shape):
         r"""Add a shape to export
 
         Parameters
         ----------
-        a_shape
+        a_shape : TopoDS_Shape or subclass
 
         """
-        # First check the shape
+        if not isinstance(a_shape, OCC.TopoDS.TopoDS_Shape) and not issubclass(a_shape.__class__,
+                                                                               OCC.TopoDS.TopoDS_Shape):
+            msg = "Expecting a TopoDS_Shape or subclass, got a %s" % a_shape.__class__
+            logger.error(msg)
+            raise ValueError(msg)
+
         if a_shape.IsNull():
-            raise AssertionError("StepExporter Error: the shape is NULL")
+            msg = "IgesExporter Error: the shape is NULL"
+            logger.error(msg)
+            raise ValueError(msg)
         else:
             self._shapes.append(a_shape)
 
     def write_file(self):
-        r"""Write STEP file
-
-        Returns
-        -------
-        bool
-
-        """
+        r"""Write STEP file"""
         for shp in self._shapes:
-            status = self.stepWriter.Transfer(shp, OCC.STEPControl.STEPControl_AsIs )
-        if status == OCC.IFSelect.IFSelect_RetDone:
-            status = self.stepWriter.Write(self._filename)
-        else:
-            return False
+            transfer_status = self._stepcontrol_writer.Transfer(shp, OCC.STEPControl.STEPControl_AsIs)
+            if transfer_status != OCC.IFSelect.IFSelect_RetDone:
+                msg = "An error occurred while transferring a shape to the STEP writer"
+                logger.error(msg)
+                raise aocxchange.exceptions.StepShapeTransferException(msg)
+
+        write_status = self._stepcontrol_writer.Write(self._filename)
 
         if self.verbose:
-            self.stepWriter.PrintStatsTransfer()
+            self._stepcontrol_writer.PrintStatsTransfer()
 
-        if status == OCC.IFSelect.IFSelect_RetDone:
-            print("STEP transfer successful.")
-            return True
+        if write_status == OCC.IFSelect.IFSelect_RetDone:
+            logger.info("STEP file write successful.")
         else:
-            return False
+            msg = "An error occurred while writing the STEP file"
+            logger.error(msg)
+            raise aocxchange.exceptions.StepFileWriteException(msg)
