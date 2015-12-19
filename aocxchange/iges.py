@@ -110,59 +110,6 @@ class IgesImporter(object):
         return compound
 
     @property
-    def faces(self):
-        r"""Return only the shapes that are faces"""
-        # return [shape for shape in self._shapes if shape.ShapeType() == OCC.TopAbs.TopAbs_FACE]
-        return aocutils.topology.Topo(self.compound, return_iter=False).faces()
-
-    @property
-    def solid(self):
-        r"""Tries to create a solid from the loaded iges geometry
-
-        Returns
-        -------
-        OCC.TopoDS.TopoDS_Solid
-
-        Notes
-        -----
-        This is meaningless for faces that are not connected
-
-        See Also
-        --------
-        examples/import_iges_multi.py to visualize the current impossibility to distinguish the 2 boxes
-
-        """
-        return aocutils.brep.solid_make.solid(self.shell)
-
-    @property
-    def shell(self):
-        r"""Tries to create a shell from the loaded iges geometry
-
-        Returns
-        -------
-        OCC.TopoDS.TopoDS_Shell
-
-        Notes
-        -----
-        This is meaningless for faces that are not connected
-
-        See Also
-        --------
-        examples/import_iges_multi.py to visualize the current impossibility to distinguish the 2 boxes
-
-        """
-        if len(self.faces) == 0:
-            msg = "Cannot build a shell from 0 face"
-            logger.error(msg)
-            raise aocxchange.exceptions.BRepBuildingException(msg)
-        builder = OCC.TopoDS.TopoDS_Builder()
-        shell = OCC.TopoDS.TopoDS_Shell()
-        builder.MakeShell(shell)
-        for face in self.faces:
-            builder.Add(shell, face)
-        return shell
-
-    @property
     def shapes(self):
         r"""Shapes getter
 
@@ -229,5 +176,3 @@ class IgesExporter(object):
             return True
         else:
             return False
-
-
