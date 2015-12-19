@@ -23,6 +23,26 @@ from/to CAD files using `PythonOCC <http://github.com/tpaviot/pythonocc-core>`_.
 
 PythonOCC is a set of Python wrappers for the OpenCascade Community Edition (an industrial strength 3D CAD modeling kernel)
 
+Warning
+-------
+
+aocxchange can import STEP, IGES and STL files. Beware that the import of a similar looking geometry from different file
+types might (and very likely will) lead to a different topology.
+
+For example, the import of 2 distinct solids (closed boxes) will lead to:
+
+- undistinguishable faces from an IGES file
+
+- 2 separate solids from a STEP file
+
+- 2 separate closed shells from a STL file
+
+If working with solids, prefer STEP; you might get away with STL but it will involve extra effort
+
+If working with surfaces, any file type will do. However, remember that STEP and IGES geometry is mathematically defined
+while STL basically stores a bunch of triangles approximating the geometry (which is absolutely fine and even
+desirable in some cases).
+
 install
 -------
 
