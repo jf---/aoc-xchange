@@ -21,7 +21,8 @@ display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.i
 # filename = aocxchange.utils.path_from_file(__file__, "./models_in/dm1-id-214.stp")
 # filename = aocxchange.utils.path_from_file(__file__, "./models_in/APB_GC.stp")  # big file 50 Mb !
 # filename = aocxchange.utils.path_from_file(__file__, "./models_in/66m.stp")
-filename = aocxchange.utils.path_from_file(__file__, "./models_in/Groupama_VO70.stp")
+filename = aocxchange.utils.path_from_file(__file__, "./models_in/ASA.STEP")
+# filename = aocxchange.utils.path_from_file(__file__, "./models_in/Groupama_VO70.stp")
 step_importer = aocxchange.step.StepImporter(filename)
 
 the_shapes = step_importer.shapes
@@ -29,7 +30,7 @@ print("Nb shapes): %i" % len(the_shapes))  # 4
 # print("number_of_shapes(): %i" % step_importer.number_of_shapes)  # 0 ??
 
 
-display.DisplayColoredShape(the_shapes[0], OCC.Quantity.Quantity_Color(OCC.Quantity.Quantity_NOC_BLUE4))
+display.DisplayColoredShape(the_shapes[0], OCC.Quantity.Quantity_Color(OCC.Quantity.Quantity_NOC_GRAY3))
 display.FitAll()
 display.View_Iso()
 start_display()
