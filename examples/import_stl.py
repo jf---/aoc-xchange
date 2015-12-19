@@ -20,7 +20,7 @@ the_shape = my_stl_importer.shape
 
 # Then display the shape
 display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display('wx')
-display.DisplayShape(the_shape, color='RED', update=True)
+display.DisplayShape(the_shape, color='BLUE', update=True)
 display.FitAll()
 display.View_Iso()
 start_display()
