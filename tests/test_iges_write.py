@@ -28,9 +28,10 @@ def cleandir():
     yield  # represents the test function call
     output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models_out")
     files = glob.glob(output_dir + "\*")
-    print(files)
+    print("Cleaning output directory ...")
     for f in files:
         os.remove(f)
+    print("Output directory clean")
 
 
 @pytest.fixture()
@@ -70,7 +71,6 @@ def test_iges_exporter_adding_not_a_shape(box_shape):
 
 def test_iges_exporter_happy_path(box_shape):
     r"""Happy path"""
-    print("there")
     filename = aocxchange.utils.path_from_file(__file__, "./models_out/box.IgS")
     exporter = aocxchange.iges.IgesExporter(filename)
     exporter.add_shape(box_shape)

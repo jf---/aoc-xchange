@@ -8,24 +8,25 @@ from __future__ import print_function
 import os
 import os.path
 import logging
+import warnings
 
 import OCC.BRep
 import OCC.IFSelect
 import OCC.Interface
-import OCC.Quantity
-import OCC.STEPCAFControl
+# import OCC.Quantity
+# import OCC.STEPCAFControl
 import OCC.STEPControl
-import OCC.TCollection
-import OCC.TColStd
-import OCC.TDF
-import OCC.TDocStd
-import OCC.TopAbs
+# import OCC.TCollection
+# import OCC.TColStd
+# import OCC.TDF
+# import OCC.TDocStd
+# import OCC.TopAbs
 import OCC.TopoDS
-import OCC.XCAFApp
-import OCC.XCAFDoc
-import OCC.XSControl
+# import OCC.XCAFApp
+# import OCC.XCAFDoc
+# import OCC.XSControl
 
-import aocutils.topology
+# import aocutils.topology
 import aocutils.types
 
 import aocxchange.exceptions
@@ -173,7 +174,13 @@ class StepExporter(object):
 
         self._shapes = list()
         self.verbose = verbose
+
+        if os.path.isfile(filename):
+            msg = "Will be overwriting file: %s" % filename
+            warnings.warn(msg)
+            logger.warning(msg)
         self._filename = filename
+
         self._stepcontrol_writer = OCC.STEPControl.STEPControl_Writer()
         self._stepcontrol_writer.SetTolerance(tolerance)
 

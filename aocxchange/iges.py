@@ -8,6 +8,7 @@ from __future__ import print_function
 import os
 import os.path
 import logging
+import warnings
 
 import OCC.BRep
 import OCC.IFSelect
@@ -213,8 +214,14 @@ class IgesExporter(object):
             logger.error(msg)
             raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
 
-        self._shapes = []
+        self._shapes = list()
+
+        if os.path.isfile(filename):
+            msg = "Will be overwriting file: %s" % filename
+            warnings.warn(msg)
+            logger.warning(msg)
         self._filename = filename
+
         if format == "5.3":
             self._brepmode = True
         else:

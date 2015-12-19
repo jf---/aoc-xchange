@@ -14,6 +14,7 @@ import OCC.TopoDS
 
 import aocxchange.exceptions
 import aocxchange.extensions
+import aocxchange.utils
 
 logger = logging.getLogger(__name__)
 
@@ -72,9 +73,26 @@ class StlExporter(object):
         (default is False)
     """
     def __init__(self, filename=None, ascii_mode=False):
+
+        if not os.path.isdir(os.path.dirname(filename)):
+            msg = "Output directory does not exist"
+            logger.error(msg)
+            raise aocxchange.exceptions.DirectoryNotFoundException(msg)
+
+        if aocxchange.utils.extract_file_extension(filename).lower() not in \
+                aocxchange.extensions.stl_extensions:
+            msg = "Accepted extensions are %s" % str(aocxchange.extensions.stl_extensions)
+            logger.error(msg)
+            raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
+
         self._shape = None  # only one shape can be exported
         self._ascii_mode = ascii_mode
-        self.set_filename(filename)
+
+        if os.path.isfile(filename):
+            msg = "Will be overwriting file: %s" % filename
+            warnings.warn(msg)
+            logger.warning(msg)
+        self._filename = filename
 
     def set_shape(self, a_shape):
         """
@@ -85,22 +103,18 @@ class StlExporter(object):
         a_shape
 
         """
-        # First check the shape
+        if not isinstance(a_shape, OCC.TopoDS.TopoDS_Shape) and not issubclass(a_shape.__class__,
+                                                                               OCC.TopoDS.TopoDS_Shape):
+            msg = "Expecting a TopoDS_Shape or subclass, got a %s" % a_shape.__class__
+            logger.error(msg)
+            raise ValueError(msg)
+
         if a_shape.IsNull():
-            raise AssertionError("StlExporter Error: the shape is NULL")
+            msg = "IgesExporter Error: the shape is NULL"
+            logger.error(msg)
+            raise ValueError(msg)
         else:
             self._shape = a_shape
-
-    def set_filename(self, filename):
-        r"""Filename setter
-
-        Parameters
-        ----------
-        filename : str
-        """
-        if os.path.isfile(filename):
-            warnings.warn('will be overwriting file: %s' % filename)
-        self._filename = filename
 
     def write_file(self):
         r"""Write file"""
