@@ -5,10 +5,7 @@ r"""IGES module of aocxchange"""
 
 from __future__ import print_function
 
-import os
-import os.path
 import logging
-import warnings
 
 import OCC.BRep
 import OCC.IFSelect
@@ -18,6 +15,7 @@ import OCC.TopAbs
 
 import aocxchange.exceptions
 import aocxchange.utils
+import aocxchange.checks
 import aocxchange.extensions
 
 import aocutils.types
@@ -39,24 +37,14 @@ class IgesImporter(object):
     """
     def __init__(self, filename=None):
         logger.info("IgesImporter instantiated with filename : %s" % filename)
+
+        aocxchange.checks.check_importer_filename(filename, aocxchange.extensions.iges_extensions)
+
         self._shapes = list()
         self.nb_shapes = 0
+        self._filename = filename
 
-        # filename checks
-        if not os.path.isfile(filename):
-            msg = "IgesImporter error: file %s not found." % filename
-            logger.error(msg)
-            raise aocxchange.exceptions.FileNotFoundException(msg)
-        elif aocxchange.utils.extract_file_extension(filename).lower() not in \
-                aocxchange.extensions.iges_extensions:
-            msg = "Accepted extensions are %s" % str(aocxchange.extensions.iges_extensions)
-            logger.error(msg)
-            raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
-        else:
-            logger.info("Filename passed existence and extension checks")
-            self._filename = filename
         logger.info("Reading file ....")
-
         self.read_file()
 
     def read_file(self):
@@ -196,30 +184,16 @@ class IgesExporter(object):
 
     """
     def __init__(self, filename, format="5.1"):
-        # Format should be "5.1" or "5.3"
 
         if format not in ["5.1", "5.3"]:
             msg = "Unsupported IGES format"
             logger.error(msg)
             raise aocxchange.exceptions.IgesUnknownFormatException(msg)
 
-        if not os.path.isdir(os.path.dirname(filename)):
-            msg = "Output directory does not exist"
-            logger.error(msg)
-            raise aocxchange.exceptions.DirectoryNotFoundException(msg)
-
-        if aocxchange.utils.extract_file_extension(filename).lower() not in \
-                aocxchange.extensions.iges_extensions:
-            msg = "Accepted extensions are %s" % str(aocxchange.extensions.iges_extensions)
-            logger.error(msg)
-            raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
+        aocxchange.checks.check_exporter_filename(filename, aocxchange.extensions.iges_extensions)
+        aocxchange.checks.check_overwrite(filename)
 
         self._shapes = list()
-
-        if os.path.isfile(filename):
-            msg = "Will be overwriting file: %s" % filename
-            warnings.warn(msg)
-            logger.warning(msg)
         self._filename = filename
 
         if format == "5.3":
@@ -235,17 +209,7 @@ class IgesExporter(object):
         a_shape : TopoDS_Shape or subclass
 
         """
-        if not isinstance(a_shape, OCC.TopoDS.TopoDS_Shape) and not issubclass(a_shape.__class__,
-                                                                               OCC.TopoDS.TopoDS_Shape):
-            msg = "Expecting a TopoDS_Shape or subclass, got a %s" % a_shape.__class__
-            logger.error(msg)
-            raise ValueError(msg)
-
-        if a_shape.IsNull():
-            msg = "IgesExporter Error: the shape is NULL"
-            logger.error(msg)
-            raise ValueError(msg)
-        else:
+        if aocxchange.checks.check_shape(a_shape):
             self._shapes.append(a_shape)
 
     def write_file(self):

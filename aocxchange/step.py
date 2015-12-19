@@ -5,32 +5,19 @@ r"""step module of aocxchange"""
 
 from __future__ import print_function
 
-import os
-import os.path
 import logging
-import warnings
 
 import OCC.BRep
 import OCC.IFSelect
 import OCC.Interface
-# import OCC.Quantity
-# import OCC.STEPCAFControl
 import OCC.STEPControl
-# import OCC.TCollection
-# import OCC.TColStd
-# import OCC.TDF
-# import OCC.TDocStd
-# import OCC.TopAbs
 import OCC.TopoDS
-# import OCC.XCAFApp
-# import OCC.XCAFDoc
-# import OCC.XSControl
 
-# import aocutils.topology
 import aocutils.types
 
 import aocxchange.exceptions
 import aocxchange.utils
+import aocxchange.checks
 import aocxchange.extensions
 
 logger = logging.getLogger(__name__)
@@ -48,20 +35,11 @@ class StepImporter(object):
         self._shapes = list()
         self._number_of_shapes = 0
 
-        # filename checks
-        if not os.path.isfile(filename):
-            msg = "StepImporter initialization Error: file %s not found." % filename
-            logger.error(msg)
-            raise aocxchange.exceptions.FileNotFoundException(msg)
-        elif aocxchange.utils.extract_file_extension(filename).lower() not in \
-                aocxchange.extensions.step_extensions:
-            msg = "Accepted extensions are %s" % str(aocxchange.extensions.step_extensions)
-            logger.error(msg)
-            raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
-        else:
-            logger.info("Filename passed existence and extension checks")
-            self._filename = filename
+        aocxchange.checks.check_importer_filename(filename, aocxchange.extensions.step_extensions)
 
+        self._filename = filename
+
+        logger.info("Reading file ....")
         self.read_file()
 
     # CONFUSING !! Comes from an assignment in ReadFile but looks like the len of shapes
@@ -161,25 +139,12 @@ class StepExporter(object):
             logger.error(msg)
             raise aocxchange.exceptions.StepUnknownSchemaException(msg)
 
-        if not os.path.isdir(os.path.dirname(filename)):
-            msg = "Output directory does not exist"
-            logger.error(msg)
-            raise aocxchange.exceptions.DirectoryNotFoundException(msg)
+        aocxchange.checks.check_exporter_filename(filename, aocxchange.extensions.step_extensions)
+        aocxchange.checks.check_overwrite(filename)
 
-        if aocxchange.utils.extract_file_extension(filename).lower() not in \
-                aocxchange.extensions.step_extensions:
-            msg = "Accepted extensions are %s" % str(aocxchange.extensions.step_extensions)
-            logger.error(msg)
-            raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
-
+        self._filename = filename
         self._shapes = list()
         self.verbose = verbose
-
-        if os.path.isfile(filename):
-            msg = "Will be overwriting file: %s" % filename
-            warnings.warn(msg)
-            logger.warning(msg)
-        self._filename = filename
 
         self._stepcontrol_writer = OCC.STEPControl.STEPControl_Writer()
         self._stepcontrol_writer.SetTolerance(tolerance)
@@ -194,17 +159,7 @@ class StepExporter(object):
         a_shape : TopoDS_Shape or subclass
 
         """
-        if not isinstance(a_shape, OCC.TopoDS.TopoDS_Shape) and not issubclass(a_shape.__class__,
-                                                                               OCC.TopoDS.TopoDS_Shape):
-            msg = "Expecting a TopoDS_Shape or subclass, got a %s" % a_shape.__class__
-            logger.error(msg)
-            raise ValueError(msg)
-
-        if a_shape.IsNull():
-            msg = "IgesExporter Error: the shape is NULL"
-            logger.error(msg)
-            raise ValueError(msg)
-        else:
+        if aocxchange.checks.check_shape(a_shape):
             self._shapes.append(a_shape)
 
     def write_file(self):
