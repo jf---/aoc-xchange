@@ -59,6 +59,11 @@ class IgesUnknownFormatException(AocXChangeException):
     pass
 
 
+class IgesFileWriteException(FileWriteException):
+    r"""An error occurred while writing a IGES file"""
+    pass
+
+
 # STEP Specific
 
 
@@ -73,7 +78,7 @@ class StepUnknownSchemaException(AocXChangeException):
 
 
 class StepFileWriteException(FileWriteException):
-    r"""The STEP format s not AP203 or AP214CD"""
+    r"""An error occurred while writing a STEP file"""
     pass
 
 

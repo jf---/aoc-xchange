@@ -67,7 +67,7 @@ class IgesImporter(object):
 
             for n in range(1, nb_roots + 1):
 
-                logger.info("Root index %i" % n)
+                logger.debug("Root index %i" % n)
 
                 # for i in range(1, self.nb_shapes + 1):
                 a_shape = igescontrol_reader.Shape(n)
@@ -76,7 +76,7 @@ class IgesImporter(object):
                     logger.warning(msg)
                 else:
                     self._shapes.append(a_shape)
-                    logger.info("Appending a %s to list of shapes" %
+                    logger.debug("Appending a %s to list of shapes" %
                                 aocutils.types.topo_types_dict[a_shape.ShapeType()])
         else:
             msg = "Status is not OCC.IFSelect.IFSelect_RetDone or No root for transfer"
@@ -131,6 +131,8 @@ class IgesExporter(object):
 
     """
     def __init__(self, filename, format="5.1"):
+        logger.info("IgesExporter instantiated with filename : %s" % filename)
+        logger.info("IgesExporter format : %s" % format)
 
         if format not in ["5.1", "5.3"]:
             msg = "Unsupported IGES format"
@@ -172,7 +174,12 @@ class IgesExporter(object):
         for shape in self._shapes:
             iges_writer.AddShape(shape)
         iges_writer.ComputeModel()
-        if iges_writer.Write(self._filename):
-            return True
+
+        write_status = iges_writer.Write(self._filename)
+
+        if write_status == OCC.IFSelect.IFSelect_RetDone:
+            logger.info("IGES file write successful.")
         else:
-            return False
+            msg = "An error occurred while writing the IGES file"
+            logger.error(msg)
+            raise aocxchange.exceptions.IgesFileWriteException(msg)

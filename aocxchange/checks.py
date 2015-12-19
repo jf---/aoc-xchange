@@ -32,6 +32,8 @@ def check_importer_filename(filename, allowed_extensions):
         msg = "Importer error : file %s not found." % filename
         logger.error(msg)
         raise aocxchange.exceptions.FileNotFoundException(msg)
+    else:
+        logger.debug("File to import exists")
 
     _check_extension(filename, allowed_extensions)
     logger.info("Filename passed checks")
@@ -54,6 +56,8 @@ def check_exporter_filename(filename, allowed_extensions):
         msg = "Exporter error : Output directory does not exist"
         logger.error(msg)
         raise aocxchange.exceptions.DirectoryNotFoundException(msg)
+    else:
+        logger.debug("Directory to export to exists")
 
     _check_extension(filename, allowed_extensions)
     logger.info("Filename passed checks")
@@ -87,6 +91,8 @@ def _check_extension(filename, allowed_extensions):
         msg = "Accepted extensions are %s" % str(allowed_extensions)
         logger.error(msg)
         raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
+    else:
+        logger.debug("Extension is ok")
 
 
 def check_shape(a_shape):

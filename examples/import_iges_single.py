@@ -25,16 +25,10 @@ iges_importer = aocxchange.iges.IgesImporter(filename)
 print(iges_importer.nb_shapes)  # 13
 print(len(iges_importer.shapes))  # 169
 
-show = "faces"
-if show == "compound":
-    the_compound = iges_importer.compound
-    display.DisplayShape(the_compound)
-elif show == "shell":
-    the_shell = iges_importer.shell
-    display.DisplayShape(the_shell)
-else:
-    for face in iges_importer.faces:
-        display.DisplayShape(face)
+
+the_compound = iges_importer.compound
+display.DisplayShape(the_compound)
+
 
 display.FitAll()
 display.View_Iso()

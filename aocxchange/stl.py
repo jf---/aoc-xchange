@@ -61,6 +61,8 @@ class StlExporter(object):
         (default is False)
     """
     def __init__(self, filename=None, ascii_mode=False):
+        logger.info("StlExporter instantiated with filename : %s" % filename)
+        logger.info("StlExporter ascii : %s" % str(ascii_mode))
 
         aocxchange.checks.check_exporter_filename(filename, aocxchange.extensions.stl_extensions)
         aocxchange.checks.check_overwrite(filename)
@@ -85,3 +87,4 @@ class StlExporter(object):
         r"""Write file"""
         stl_writer = OCC.StlAPI.StlAPI_Writer()
         stl_writer.Write(self._shape, self._filename, self._ascii_mode)
+        logger.info("Wrote STL file")

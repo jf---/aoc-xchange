@@ -6,6 +6,7 @@ r"""step module of aocxchange"""
 from __future__ import print_function
 
 import logging
+import warnings
 
 import OCC.BRep
 import OCC.IFSelect
@@ -79,15 +80,20 @@ class StepImporter(object):
                 ok = stepcontrol_reader.TransferRoot(n)
                 logger.info("TransferRoots status : %i" % ok)
 
-                # for i in range(1, self.nb_shapes + 1):
-                a_shape = stepcontrol_reader.Shape(n)
-                if a_shape.IsNull():
-                    msg = "At least one shape in IGES cannot be transferred"
-                    logger.warning(msg)
+                if ok:
+                    # for i in range(1, self.nb_shapes + 1):
+                    a_shape = stepcontrol_reader.Shape(n)
+                    if a_shape.IsNull():
+                        msg = "At least one shape in IGES cannot be transferred"
+                        logger.warning(msg)
+                    else:
+                        self._shapes.append(a_shape)
+                        logger.info("Appending a %s to list of shapes" %
+                                    aocutils.types.topo_types_dict[a_shape.ShapeType()])
                 else:
-                    self._shapes.append(a_shape)
-                    logger.info("Appending a %s to list of shapes" %
-                                aocutils.types.topo_types_dict[a_shape.ShapeType()])
+                    msg = "One shape could not be transferred"
+                    logger.warning(msg)
+                    warnings.warn(msg)
             return True
         else:
             msg = "Status is not OCC.IFSelect.IFSelect_RetDone"
@@ -133,6 +139,9 @@ class StepExporter(object):
 
     """
     def __init__(self, filename, verbose=False, schema="AP214CD", tolerance=1e-4):
+        logger.info("StepExporter instantiated with filename : %s" % filename)
+        logger.info("StepExporter schema : %s" % schema)
+        logger.info("StepExporter tolerance : %s" % str(tolerance))
 
         if schema not in ["AP203", "AP214CD"]:
             msg = "Unsupported STEP schema"
