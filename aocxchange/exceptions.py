@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-r"""Exceptions for Aoc Data Exchange"""
+r"""Exceptions for aocxchange"""
 
 
 class AocXChangeException(Exception):

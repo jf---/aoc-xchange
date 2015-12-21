@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-r"""step_ocaf module of occaddons.dataexchange"""
+r"""step_ocaf module of aocxchange"""
 
 from __future__ import print_function
 
@@ -25,12 +25,19 @@ import OCC.XSControl
 
 import aocutils.topology
 
+import aocxchange.checks
+import aocxchange.exceptions
+import aocxchange.extensions
+
 logger = logging.getLogger(__name__)
 
 
-class StepOcafImport(object):
+class StepOcafImporter(object):
     r"""Imports STEP file that support layers & colors"""
     def __init__(self, filename):
+
+        aocxchange.checks.check_importer_filename(filename, aocxchange.extensions.step_extensions)
+
         self.filename = filename
 
         # The shape at index i in the following list corresponds
@@ -38,6 +45,8 @@ class StepOcafImport(object):
         self._shapes = list()
         self._colors = list()
         self._layers = list()
+
+        self.read_file()
 
     @property
     def shapes(self):
@@ -159,12 +168,17 @@ class StepOcafImport(object):
         return True
 
 
-class StepOcafExport(object):
+class StepOcafExporter(object):
     r"""STEP export that support layers & colors"""
     def __init__(self, filename, layer_name='layer-00'):
+        logger.info("StepOcafExporter instantiated with filename : %s" % filename)
+
+        aocxchange.checks.check_exporter_filename(filename, aocxchange.extensions.step_extensions)
+        aocxchange.checks.check_overwrite(filename)
+
         self.filename = filename
         self.h_doc = h_doc = OCC.TDocStd.Handle_TDocStd_Document()
-        print("Empty Doc?", h_doc.IsNull())
+        logger.info("Empty Doc?", h_doc.IsNull())
 
         # Create the application
         app = OCC.XCAFApp._XCAFApp.XCAFApp_Application_GetApplication().GetObject()
@@ -193,10 +207,10 @@ class StepOcafExport(object):
 
         Parameters
         ----------
-        r
-        g
-        b
-        color
+        r : float
+        g : float
+        b : float
+        color : OCC.Quantity.Quantity_Color
 
         """
         if color is not None:
@@ -240,8 +254,8 @@ class StepOcafExport(object):
             layer name
 
         """
-        assert issubclass(shape.__class__, OCC.TopoDS.TopoDS_Shape) or isinstance(shape, OCC.TopoDS.TopoDS_Shape),\
-            'not a TopoDS_Shape or subclass'
+        aocxchange.checks.check_shape(shape)  # raises an exception if the shape is not valid
+
         shp_label = self.shape_tool.AddShape(shape)
 
         if color is None:
@@ -265,7 +279,18 @@ class StepOcafExport(object):
         r"""Write file"""
         work_session = OCC.XSControl.XSControl_WorkSession()
         writer = OCC.STEPCAFControl.STEPCAFControl_Writer(work_session.GetHandle(), False)
-        writer.Transfer(self.h_doc, OCC.STEPControl.STEPControl_AsIs)
+
+        transfer_status = writer.Transfer(self.h_doc, OCC.STEPControl.STEPControl_AsIs)
+        if transfer_status != OCC.IFSelect.IFSelect_RetDone:
+            msg = "An error occurred while transferring a shape to the STEP writer"
+            logger.error(msg)
+            raise aocxchange.exceptions.StepShapeTransferException(msg)
         logger.info('Writing STEP file')
-        status = writer.Write(self.filename)
-        logger.info('Status:', status)
+
+        write_status = writer.Write(self.filename)
+        if write_status == OCC.IFSelect.IFSelect_RetDone:
+            logger.info("STEP file write successful.")
+        else:
+            msg = "An error occurred while writing the STEP file"
+            logger.error(msg)
+            raise aocxchange.exceptions.StepFileWriteException(msg)
