@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-r"""Common checks to all exporters and importers
-"""
+r"""Common checks to all exporters and importers"""
 
 import os.path
 import logging
@@ -16,15 +15,26 @@ import aocxchange.utils
 logger = logging.getLogger(__name__)
 
 
-def check_importer_filename(filename, allowed_extensions):
-    r"""Check the filename is ok for importing
+def check_importer_filename(filename, allowed_extensions="*"):
+    r"""Check the filename is ok for importing.
+
+    Checks that:
+    - the file exists
+    - the file extension is one of the extensions in allowed extensions (case insensitive check)
 
     Parameters
     ----------
     filename : str
-        Full path to the file
+        Full / absolute path to the file
     allowed_extensions : list[str]
         List of allowed extensions
+
+    Raises
+    ------
+    aocxchange.exceptions.FileNotFoundException
+        if the file does not exist
+    aocxchange.exceptions.IncompatibleFileFormatException
+        if the extension is not in allowed extensions
 
     """
     # Check the file exists
@@ -35,13 +45,19 @@ def check_importer_filename(filename, allowed_extensions):
     else:
         logger.debug("File to import exists")
 
-    _check_extension(filename, allowed_extensions)
+    # Check the extension
+    if allowed_extensions != "*":
+        _check_extension(filename, allowed_extensions)
+
     logger.info("Filename passed checks")
-    return True
 
 
-def check_exporter_filename(filename, allowed_extensions):
+def check_exporter_filename(filename, allowed_extensions="*"):
     r"""Check the filename is ok for exporting
+
+    Checks that:
+    - the directory in the filename exists
+    - the file extension is one of the extensions in allowed extensions (case insensitive check)
 
     Parameters
     ----------
@@ -49,6 +65,13 @@ def check_exporter_filename(filename, allowed_extensions):
         Full path to the file
     allowed_extensions : list[str]
         List of allowed extensions
+
+    Raises
+    ------
+    aocxchange.exceptions.DirectoryNotFoundException
+        if the directory from the filename does not exist
+    aocxchange.exceptions.IncompatibleFileFormatException
+        if the extension is not in allowed extensions
 
     """
     # Check the output directory exists
@@ -59,13 +82,25 @@ def check_exporter_filename(filename, allowed_extensions):
     else:
         logger.debug("Directory to export to exists")
 
-    _check_extension(filename, allowed_extensions)
+    # check the extension
+    if allowed_extensions != "*":
+        _check_extension(filename, allowed_extensions)
+
     logger.info("Filename passed checks")
-    return True
+
+
+def _check_extension(filename, allowed_extensions):
+    r"""Check that the extension extracted from filename is in allowed extensions"""
+    if aocxchange.utils.extract_file_extension(filename).lower() not in allowed_extensions:
+        msg = "Accepted extensions are %s" % str(allowed_extensions)
+        logger.error(msg)
+        raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
+    else:
+        logger.debug("Extension is ok")
 
 
 def check_overwrite(filename):
-    r"""
+    r"""Determines if writing will overwrite the file denoted by filename
 
     Parameters
     ----------
@@ -75,6 +110,7 @@ def check_overwrite(filename):
     Returns
     -------
     bool
+        True if would overwrite, False otherwise
 
     """
     if os.path.isfile(filename):
@@ -86,17 +122,8 @@ def check_overwrite(filename):
         return False
 
 
-def _check_extension(filename, allowed_extensions):
-    if aocxchange.utils.extract_file_extension(filename).lower() not in allowed_extensions:
-        msg = "Accepted extensions are %s" % str(allowed_extensions)
-        logger.error(msg)
-        raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
-    else:
-        logger.debug("Extension is ok")
-
-
 def check_shape(a_shape):
-    r"""Check the shape before adding it to an exporter
+    r"""Check the shape before adding it to an exporter.
 
     Parameters
     ----------
@@ -116,5 +143,3 @@ def check_shape(a_shape):
         msg = "IgesExporter Error: the shape is NULL"
         logger.error(msg)
         raise ValueError(msg)
-
-    return True

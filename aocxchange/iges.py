@@ -158,8 +158,8 @@ class IgesExporter(object):
         a_shape : TopoDS_Shape or subclass
 
         """
-        if aocxchange.checks.check_shape(a_shape):
-            self._shapes.append(a_shape)
+        aocxchange.checks.check_shape(a_shape)  # raises an exception if the shape is not valid
+        self._shapes.append(a_shape)
 
     def write_file(self):
         r"""Write file

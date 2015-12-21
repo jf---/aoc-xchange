@@ -80,8 +80,8 @@ class StlExporter(object):
         a_shape
 
         """
-        if aocxchange.checks.check_shape(a_shape):
-            self._shape = a_shape
+        aocxchange.checks.check_shape(a_shape)  # raises an exception if the shape is not valid
+        self._shape = a_shape
 
     def write_file(self):
         r"""Write file"""
