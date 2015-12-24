@@ -19,7 +19,9 @@ aoc-xchange
    :alt: Python 2.7 3.*
 
 The **aoc-xchange** project provides a Python package named **aocxchange** to read and write
-from/to CAD files using `PythonOCC <http://www.pythonocc.org/>`_.
+from/to IGES, STEP and STL files using `PythonOCC <http://www.pythonocc.org/>`_.
+
+**aocxchange** can also read 2D foil section definition files (.dat files)
 
 PythonOCC is a set of Python wrappers for the OpenCascade Community Edition (an industrial strength 3D CAD modeling kernel)
 
