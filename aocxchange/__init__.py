@@ -14,7 +14,7 @@ from __future__ import unicode_literals
 __name__ = "aocxchange"
 __description__ = "Read/write to/from CAD files"
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __author__ = "Guillaume Florent"
 __author_email__ = "florentsailing@gmail.com"
 __license__ = 'GPL v3'
