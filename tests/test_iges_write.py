@@ -103,8 +103,8 @@ def test_iges_exporter_overwrite(box_shape):
     # read the written box.igs
     importer = aocxchange.iges.IgesImporter(filename)
     topo_compound = aocutils.topology.Topo(importer.compound)
-    assert topo_compound.number_of_faces() == 6
-    assert topo_compound.number_of_edges() == 24
+    assert topo_compound.number_of_faces == 6
+    assert topo_compound.number_of_edges == 24
 
     # add a sphere and write again with same exporter
     sphere = OCC.BRepPrimAPI.BRepPrimAPI_MakeSphere(10)
@@ -114,7 +114,7 @@ def test_iges_exporter_overwrite(box_shape):
     # check that the file contains the box and the sphere
     importer = aocxchange.iges.IgesImporter(filename)
     topo_compound = aocutils.topology.Topo(importer.compound)
-    assert topo_compound.number_of_faces() == 7  # 6 from box + 1 from sphere
+    assert topo_compound.number_of_faces == 7  # 6 from box + 1 from sphere
 
     # create a new exporter and overwrite with a box only
     filename = aocxchange.utils.path_from_file(__file__, "./models_out/box.igs")
@@ -127,4 +127,4 @@ def test_iges_exporter_overwrite(box_shape):
     # check the file only contains a box
     importer = aocxchange.iges.IgesImporter(filename)
     topo_compound = aocutils.topology.Topo(importer.compound)
-    assert topo_compound.number_of_faces() == 6  # 6 from box
+    assert topo_compound.number_of_faces == 6  # 6 from box

@@ -9,6 +9,8 @@ import logging
 
 import OCC.Display.SimpleGui
 
+import aocutils.display.topology
+
 import aocxchange.step
 import aocxchange.utils
 
@@ -27,7 +29,9 @@ print("Nb shapes: %i" % len(step_importer.shapes))
 for shape in step_importer.shapes:
     print(shape.ShapeType())  # 2 -> solid
 # print("number_of_shapes: %i" % step_importer.number_of_shapes)  # 0 ??
-display.DisplayShape(step_importer.shapes)
+# display.DisplayShape(step_importer.shapes)
+aocutils.display.topology.solids(display, step_importer.shapes[0], transparency=0.8)
+aocutils.display.topology.edges(display, step_importer.shapes[0])
 display.FitAll()
 display.View_Iso()
 start_display()

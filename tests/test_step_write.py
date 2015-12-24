@@ -103,9 +103,9 @@ def test_step_exporter_overwrite(box_shape):
     # read the written box.stp
     importer = aocxchange.step.StepImporter(filename)
     topo_compound = aocutils.topology.Topo(importer.compound, return_iter=False)
-    assert topo_compound.number_of_faces() == 6
-    assert len(topo_compound.faces()) == 6
-    assert topo_compound.number_of_edges() == 12
+    assert topo_compound.number_of_faces == 6
+    assert len(topo_compound.faces) == 6
+    assert topo_compound.number_of_edges == 12
 
     # add a sphere and write again with same exporter
     sphere = OCC.BRepPrimAPI.BRepPrimAPI_MakeSphere(10)
@@ -114,8 +114,8 @@ def test_step_exporter_overwrite(box_shape):
 
     # check that the file contains the box and the sphere
     importer = aocxchange.step.StepImporter(filename)
-    assert len(aocutils.topology.Topo(importer.compound, return_iter=False).faces()) == 7  # 6 from box + 1 from sphere
-    assert len(aocutils.topology.Topo(importer.compound, return_iter=False).solids()) == 2
+    assert len(aocutils.topology.Topo(importer.compound, return_iter=False).faces) == 7  # 6 from box + 1 from sphere
+    assert len(aocutils.topology.Topo(importer.compound, return_iter=False).solids) == 2
 
     # create a new exporter and overwrite with a box only
     filename = aocxchange.utils.path_from_file(__file__, "./models_out/box.stp")
@@ -127,5 +127,5 @@ def test_step_exporter_overwrite(box_shape):
 
     # check the file only contains a box
     importer = aocxchange.step.StepImporter(filename)
-    assert len(aocutils.topology.Topo(importer.compound, return_iter=False).faces()) == 6  # 6 from box
-    assert len(aocutils.topology.Topo(importer.compound, return_iter=False).solids()) == 1
+    assert len(aocutils.topology.Topo(importer.compound, return_iter=False).faces) == 6  # 6 from box
+    assert len(aocutils.topology.Topo(importer.compound, return_iter=False).solids) == 1

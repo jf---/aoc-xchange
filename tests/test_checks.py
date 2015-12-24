@@ -83,4 +83,4 @@ def test_check_shape():
     aocxchange.checks.check_shape(shape)
 
     # a subclass of shape should not raise any exception
-    aocxchange.checks.check_shape(aocutils.topology.Topo(shape, return_iter=False).edges()[0])
+    aocxchange.checks.check_shape(aocutils.topology.Topo(shape, return_iter=False).edges[0])

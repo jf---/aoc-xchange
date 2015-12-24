@@ -9,6 +9,8 @@ import logging
 
 import OCC.Display.SimpleGui
 
+import aocutils.display.topology
+
 import aocxchange.iges
 import aocxchange.utils
 
@@ -24,11 +26,12 @@ iges_importer = aocxchange.iges.IgesImporter(filename)
 the_shapes = iges_importer.shapes
 
 print(iges_importer.nb_shapes)  # 13
-print(len(iges_importer.shapes))  # 169
+print(len(iges_importer.shapes))  # 13
 
+# display.DisplayShape(iges_importer.compound)
 
-display.DisplayShape(iges_importer.compound)
-
+# there are no shells or solids in the compound (IGES specific)
+aocutils.display.topology.faces(display, iges_importer.compound)
 
 display.FitAll()
 display.View_Iso()

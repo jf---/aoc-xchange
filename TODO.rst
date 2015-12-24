@@ -3,6 +3,8 @@ tests
 -----
 include tests with different geometries (open shell, curves etc ...)
 step_ocaf
+Python 3 tests
+doctests?
 
 iges
 ----

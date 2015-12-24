@@ -100,7 +100,7 @@ def test_stl_exporter_overwrite(box_shape):
     # read the written box.stl
     importer = aocxchange.stl.StlImporter(filename)
     topo = aocutils.topology.Topo(importer.shape)
-    assert topo.number_of_shells() == 1
+    assert topo.number_of_shells == 1
 
     # set a sphere and write again with same exporter
     sphere = OCC.BRepPrimAPI.BRepPrimAPI_MakeSphere(10)
@@ -110,7 +110,7 @@ def test_stl_exporter_overwrite(box_shape):
     # check that the file contains the sphere only
     importer = aocxchange.stl.StlImporter(filename)
     topo = aocutils.topology.Topo(importer.shape)
-    assert topo.number_of_shells() == 1
+    assert topo.number_of_shells == 1
 
     # create a new exporter and overwrite with a box only
     filename = aocxchange.utils.path_from_file(__file__, "./models_out/box.stl")
@@ -123,4 +123,4 @@ def test_stl_exporter_overwrite(box_shape):
     # check the file only contains a box
     importer = aocxchange.stl.StlImporter(filename)
     topo = aocutils.topology.Topo(importer.shape)
-    assert topo.number_of_shells() == 1
+    assert topo.number_of_shells == 1

@@ -19,14 +19,14 @@ aoc-xchange
    :alt: Python 2.7 3.*
 
 The **aoc-xchange** project provides a Python package named **aocxchange** to read and write
-from/to CAD files using `PythonOCC <http://github.com/tpaviot/pythonocc-core>`_.
+from/to CAD files using `PythonOCC <http://www.pythonocc.org/>`_.
 
 PythonOCC is a set of Python wrappers for the OpenCascade Community Edition (an industrial strength 3D CAD modeling kernel)
 
 Warning
 -------
 
-aocxchange can import STEP, IGES and STL files. Beware that the import of a similar looking geometry from different file
+**aocxchange** can import STEP, IGES and STL files. Beware that the import of a similar looking geometry from different file
 types might (and very likely will) lead to a different topology.
 
 For example, the import of 2 distinct solids (closed boxes) will lead to:
@@ -53,7 +53,7 @@ install
 Dependencies
 ~~~~~~~~~~~~
 
-*aocxchange* depends on OCC >=0.16 and occutils. The examples require wx>=2.8 (or another backend (minor code modifications required)).
+*aocxchange* depends on OCC >=0.16 and aocutils. The examples require wx>=2.8 (or another backend (minor code modifications required)).
 Please see the table below for instructions on how to satisfy the requirements.
 
 +----------+----------+----------------------------------------------------------------------------+
@@ -62,7 +62,7 @@ Please see the table below for instructions on how to satisfy the requirements.
 | OCC      | >=0.16.  | | See pythonocc.org or github.com.tpaviot/pythonocc-core for instructions  |
 |          |          | | or `conda install -c https://conda.anaconda.org/dlr-sc pythonocc-core`   |
 +----------+----------+----------------------------------------------------------------------------+
-| aocutils | latest   | `pip install aocutils`                                                     |
+| aocutils | latest   | `pip install aocutils --upgrade`                                           |
 +----------+----------+----------------------------------------------------------------------------+
 | wx       | >=2.8    | See wxpython.org for instructions                                          |
 +----------+----------+----------------------------------------------------------------------------+
@@ -90,3 +90,15 @@ The examples are in the *examples* folder at the Github repository (https://gith
 
 The wx backend (wxPython) backend is used for the examples that display a UI.
 You may easily change this behaviour to use pyqt4 or PySide by changing the backend in the call to init_display().
+
+.. image:: https://raw.githubusercontent.com/floatingpointstack/aoc-xchange/master/img/submarine.jpg
+   :alt: submarine from STL
+
+.. image:: https://raw.githubusercontent.com/floatingpointstack/aoc-xchange/master/img/step_import_wing_structure_solids.jpg
+   :alt: wing structure solids from STEP
+
+.. image:: https://raw.githubusercontent.com/floatingpointstack/aoc-xchange/master/img/vor70_cockpit.jpg
+   :alt: VOR 70 cockpit from STEP
+
+.. image:: https://raw.githubusercontent.com/floatingpointstack/aoc-xchange/master/img/step_import_aube_solids_and_edges.jpg
+   :alt: Aube solids and edges from STEP

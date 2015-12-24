@@ -52,8 +52,8 @@ def test_iges_importer_happy_topology():
     importer = aocxchange.iges.IgesImporter(aocxchange.utils.path_from_file(__file__, "./models_in/box.igs"))
 
     topo = aocutils.topology.Topo(importer.compound, return_iter=False)
-    assert topo.number_of_faces() == 6
-    assert topo.number_of_edges() == 24  # 12 edges * 2 possible orientations ?
+    assert topo.number_of_faces == 6
+    assert topo.number_of_edges == 24  # 12 edges * 2 possible orientations ?
 
 
 def test_iges_importer_2_boxes():
@@ -66,5 +66,5 @@ def test_iges_importer_2_boxes():
     """
     importer = aocxchange.iges.IgesImporter(aocxchange.utils.path_from_file(__file__, "./models_in/2_boxes.igs"))
     topo = aocutils.topology.Topo(importer.compound, return_iter=False)
-    assert topo.number_of_faces() == 6 * 2
-    assert topo.number_of_edges() == 24 * 2
+    assert topo.number_of_faces == 6 * 2
+    assert topo.number_of_edges == 24 * 2

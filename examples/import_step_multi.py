@@ -10,6 +10,8 @@ import logging
 import OCC.Display.SimpleGui
 import OCC.Quantity
 
+import aocutils.display.topology
+
 import aocxchange.step
 import aocxchange.utils
 
@@ -26,11 +28,11 @@ filename = aocxchange.utils.path_from_file(__file__, "./models_in/ASA.STEP")
 step_importer = aocxchange.step.StepImporter(filename)
 
 the_shapes = step_importer.shapes
-print("Nb shapes): %i" % len(the_shapes))  # 4
+print("Nb shapes : %i" % len(the_shapes))  # 4
 # print("number_of_shapes(): %i" % step_importer.number_of_shapes)  # 0 ??
 
-
-display.DisplayColoredShape(the_shapes[0], OCC.Quantity.Quantity_Color(OCC.Quantity.Quantity_NOC_GRAY3))
+# display.DisplayColoredShape(the_shapes[0], OCC.Quantity.Quantity_Color(OCC.Quantity.Quantity_NOC_GRAY3))
+aocutils.display.topology.solids(display, the_shapes[0])
 display.FitAll()
 display.View_Iso()
 start_display()

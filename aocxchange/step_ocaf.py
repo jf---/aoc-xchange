@@ -153,10 +153,10 @@ class StepOcafImporter(object):
             if a_shape.ShapeType() == OCC.TopAbs.TopAbs_COMPOUND:
                 logger.info("The shape type is OCC.TopAbs.TopAbs_COMPOUND")
                 topo = aocutils.topology.Topo(a_shape)
-                logger.info("Nb of compounds : %i" % topo.number_of_compounds())
-                logger.info("Nb of solids : %i" % topo.number_of_solids())
-                logger.info("Nb of shells : %i" % topo.number_of_shells())
-                for solid in topo.solids():
+                logger.info("Nb of compounds : %i" % topo.number_of_compounds)
+                logger.info("Nb of solids : %i" % topo.number_of_solids)
+                logger.info("Nb of shells : %i" % topo.number_of_shells)
+                for solid in topo.solids:
                     logger.info("Adding solid to the shapes list")
                     self._shapes.append(solid)
             elif a_shape.ShapeType() == OCC.TopAbs.TopAbs_SOLID:

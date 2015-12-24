@@ -59,10 +59,10 @@ def test_step_importer_happy_topology():
     assert importer.shapes[0].ShapeType() == OCC.TopAbs.TopAbs_SOLID
 
     topo = aocutils.topology.Topo(importer.shapes[0])
-    assert topo.number_of_compounds() == 0
-    assert topo.number_of_comp_solids() == 0
-    assert topo.number_of_solids() == 1
-    assert topo.number_of_shells() == 1
+    assert topo.number_of_compounds == 0
+    assert topo.number_of_comp_solids == 0
+    assert topo.number_of_solids == 1
+    assert topo.number_of_shells == 1
 
 
 def test_step_importer_2_boxes():
@@ -72,7 +72,7 @@ def test_step_importer_2_boxes():
     assert importer.shapes[0].ShapeType() == OCC.TopAbs.TopAbs_COMPOUND
 
     topo = aocutils.topology.Topo(importer.shapes[0])
-    assert topo.number_of_compounds() == 1
-    assert topo.number_of_comp_solids() == 0
-    assert topo.number_of_solids() == 2
-    assert topo.number_of_shells() == 2
+    assert topo.number_of_compounds == 1
+    assert topo.number_of_comp_solids == 0
+    assert topo.number_of_solids == 2
+    assert topo.number_of_shells == 2
