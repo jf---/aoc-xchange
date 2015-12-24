@@ -8,6 +8,8 @@ import logging
 import OCC.BRepPrimAPI
 import OCC.Display.SimpleGui
 
+import aocutils.display.defaults
+
 import aocxchange.step_ocaf
 
 logging.basicConfig(level=logging.DEBUG,
@@ -38,7 +40,8 @@ the_layers_str = my_step_importer.layers_str
 
 print("Number of shapes : %i " % len(the_shapes))
 
-display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display('wx')
+backend = aocutils.display.defaults.backend
+display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display(backend)
 
 for i, shape in enumerate(the_shapes):
     display.DisplayShape(shape, color=the_colors[i])

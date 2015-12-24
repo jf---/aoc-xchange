@@ -8,6 +8,7 @@ import logging
 import OCC.Display.SimpleGui
 
 import aocutils.display.topology
+import aocutils.display.defaults
 
 import aocxchange.stl
 import aocxchange.utils
@@ -23,7 +24,8 @@ my_stl_importer = aocxchange.stl.StlImporter(filename)
 the_shape = my_stl_importer.shape
 
 # Then display the shape
-display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display('wx')
+backend = aocutils.display.defaults.backend
+display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display(backend)
 # display.DisplayShape(the_shape, color='BLUE', update=True)
 
 # 1 shell to display

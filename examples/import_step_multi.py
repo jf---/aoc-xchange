@@ -11,14 +11,15 @@ import OCC.Display.SimpleGui
 import OCC.Quantity
 
 import aocutils.display.topology
+import aocutils.display.defaults
 
 import aocxchange.step
 import aocxchange.utils
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s :: %(levelname)6s :: %(module)20s :: %(lineno)3d :: %(message)s')
-
-display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display('wx')
+backend = aocutils.display.defaults.backend
+display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display(backend)
 
 # filename = aocxchange.utils.path_from_file(__file__, "./models_in/dm1-id-214.stp")
 # filename = aocxchange.utils.path_from_file(__file__, "./models_in/APB_GC.stp")  # big file 50 Mb !
