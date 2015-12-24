@@ -97,7 +97,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=['occdataexchange'],
+    packages=['aocxchange'],
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
@@ -108,7 +108,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     # install_requires=['OCC', 'scipy', 'wx'],
-    install_requires=[],  # OCC, scipy and wx cannot be installed via pip
+    install_requires=['aocutils'],  # OCC, scipy and wx cannot be installed via pip
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
