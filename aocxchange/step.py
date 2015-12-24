@@ -33,6 +33,7 @@ class StepImporter(object):
 
     """
     def __init__(self, filename=None):
+        logger.info("StepImporter instantiated with filename : %s" % filename)
         self._shapes = list()
         self._number_of_shapes = 0
 
