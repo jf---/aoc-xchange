@@ -23,3 +23,13 @@ issues
 ------
 importing iges box -> 24 edges
 importing step box -> 12 edges
+
+Later
+-----
+
+opennurbs
+  -> python bindings (cf. https://github.com/raj12lnm/OpenNurbs-Python) with pybindgen (or swig?)
+        cython can be used to wrao existing codebases (and libraries for automation exist)
+        https://github.com/cython/cython/wiki/AutoPxd
+  -> work from/to 3dm files
+  -> cage editing available in opennurbs?
