@@ -52,7 +52,7 @@ def check_importer_filename(filename, allowed_extensions="*"):
     logger.info("Filename passed checks")
 
 
-def check_exporter_filename(filename, allowed_extensions="*"):
+def check_exporter_filename(filename, allowed_extensions="*", create_directory=False):
     r"""Check the filename is ok for exporting
 
     Checks that:
@@ -63,8 +63,12 @@ def check_exporter_filename(filename, allowed_extensions="*"):
     ----------
     filename : str
         Full path to the file
-    allowed_extensions : list[str]
+    allowed_extensions : list[str] or "*" (optional)
         List of allowed extensions
+        The default is "*" which implies no check on the extension
+    create_directory : bool (optional)
+        Should the directory be created if it does not exist
+        The default is False (no attempt made to create an inexistent directory)
 
     Raises
     ------
@@ -72,13 +76,18 @@ def check_exporter_filename(filename, allowed_extensions="*"):
         if the directory from the filename does not exist
     aocxchange.exceptions.IncompatibleFileFormatException
         if the extension is not in allowed extensions
+    OSError
+        if create directory is True and the inexistent directory cannot be created
 
     """
     # Check the output directory exists
     if not os.path.isdir(os.path.dirname(filename)):
-        msg = "Exporter error : Output directory does not exist"
-        logger.error(msg)
-        raise aocxchange.exceptions.DirectoryNotFoundException(msg)
+        if create_directory is True:
+            os.makedirs(os.path.split(filename)[0])  # may raise OSError
+        else:
+            msg = "Exporter error : Output directory does not exist"
+            logger.error(msg)
+            raise aocxchange.exceptions.DirectoryNotFoundException(msg)
     else:
         logger.debug("Directory to export to exists")
 

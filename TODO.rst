@@ -5,7 +5,8 @@ include tests with different geometries (open shell, curves etc ...)
 step_ocaf
 Python 3 tests
 doctests?
-brep importer nd exporter tests
+brep importer and exporter tests
+auto folder creation option in checks.py/check_exporter_filename()
 
 iges
 ----
