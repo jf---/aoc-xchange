@@ -22,7 +22,7 @@ backend = aocutils.display.defaults.backend
 display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display(backend)
 
 # my_iges_importer = occaddons.dataexchange.iges.IgesImporter("../../data/IGES/splines.igs")
-filename = aocxchange.utils.path_from_file(__file__, "./models_in/aube_pleine.iges")
+filename = aocxchange.utils.path_from_file(__file__, "./models_in/iges/aube_pleine.iges")
 iges_importer = aocxchange.iges.IgesImporter(filename)
 
 print(iges_importer.nb_shapes)  # 13

@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.DEBUG,
 backend = aocutils.display.defaults.backend
 display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display(backend)
 
-filename = aocxchange.utils.path_from_file(__file__, "./models_in/aube_pleine.stp")
+filename = aocxchange.utils.path_from_file(__file__, "./models_in/step/aube_pleine.stp")
 step_importer = aocxchange.step.StepImporter(filename)
 
 # step_importer.read_file() -> automatic read_file !!

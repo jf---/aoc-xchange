@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.DEBUG,
 # open/parse STL file and get the resulting TopoDS_Shape instance
 # filename = aocxchange.utils.path_from_file(__file__, "./models_in/sample.stl")
 # filename = aocxchange.utils.path_from_file(__file__, "./models_in/USS_Albacore.STL")
-filename = aocxchange.utils.path_from_file(__file__, "./models_in/USS_Albacore.STL")
+filename = aocxchange.utils.path_from_file(__file__, "./models_in/stl/USS_Albacore.STL")
 my_stl_importer = aocxchange.stl.StlImporter(filename)
 the_shape = my_stl_importer.shape
 

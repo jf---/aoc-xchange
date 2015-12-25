@@ -21,11 +21,11 @@ logging.basicConfig(level=logging.DEBUG,
 backend = aocutils.display.defaults.backend
 display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display(backend)
 
-# filename = aocxchange.utils.path_from_file(__file__, "./models_in/dm1-id-214.stp")
-# filename = aocxchange.utils.path_from_file(__file__, "./models_in/APB_GC.stp")  # big file 50 Mb !
-# filename = aocxchange.utils.path_from_file(__file__, "./models_in/66m.stp")
-filename = aocxchange.utils.path_from_file(__file__, "./models_in/ASA.STEP")
-# filename = aocxchange.utils.path_from_file(__file__, "./models_in/Groupama_VO70.stp")
+# filename = aocxchange.utils.path_from_file(__file__, "./models_in/step/dm1-id-214.stp")
+# filename = aocxchange.utils.path_from_file(__file__, "./models_in/step/APB_GC.stp")  # big file 50 Mb !
+# filename = aocxchange.utils.path_from_file(__file__, "./models_in/step/66m.stp")
+filename = aocxchange.utils.path_from_file(__file__, "./models_in/step/ASA.STEP")
+# filename = aocxchange.utils.path_from_file(__file__, "./models_in/step/Groupama_VO70.stp")
 step_importer = aocxchange.step.StepImporter(filename)
 
 the_shapes = step_importer.shapes

@@ -16,7 +16,7 @@ def import_step():
     """
     Imports a STEP file.
     """
-    my_importer = aocxchange.step.StepImporter("./models_in/box_203.stp")
+    my_importer = aocxchange.step.StepImporter("./models_in/step/box_203.stp")
     print(my_importer.shapes)
 
 
