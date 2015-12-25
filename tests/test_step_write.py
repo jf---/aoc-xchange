@@ -98,6 +98,7 @@ def test_step_exporter_overwrite(box_shape):
     assert isinstance(solid, OCC.TopoDS.TopoDS_Solid)
     exporter.add_shape(solid)
     exporter.write_file()
+    initial_timestamp = os.path.getmtime(filename)
     assert os.path.isfile(filename)
 
     # read the written box.stp
@@ -111,6 +112,8 @@ def test_step_exporter_overwrite(box_shape):
     sphere = OCC.BRepPrimAPI.BRepPrimAPI_MakeSphere(10)
     exporter.add_shape(sphere.Shape())
     exporter.write_file()  # this creates a file with a box and a sphere
+    intermediate_timestamp = os.path.getmtime(filename)
+    assert intermediate_timestamp > initial_timestamp
 
     # check that the file contains the box and the sphere
     importer = aocxchange.step.StepImporter(filename)
@@ -124,6 +127,8 @@ def test_step_exporter_overwrite(box_shape):
     exporter.add_shape(solid)
     exporter.write_file()
     assert os.path.isfile(filename)
+    last_timestamp = os.path.getmtime(filename)
+    assert last_timestamp > intermediate_timestamp
 
     # check the file only contains a box
     importer = aocxchange.step.StepImporter(filename)
