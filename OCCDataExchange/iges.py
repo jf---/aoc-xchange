@@ -1,27 +1,20 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # coding: utf-8
 
-r"""IGES module of aocxchange"""
+r"""IGES module of OCCDataExchange"""
 
 from __future__ import print_function
 
 import logging
 
-import OCC.BRep
-import OCC.IFSelect
-import OCC.IGESControl
-import OCC.TopoDS
-import OCC.TopAbs
+from OCC import BRep
+from OCC import IFSelect
+from OCC import IGESControl
+from OCC import TopoDS
+from OCCUtils.types_lut import topo_lut
 
-import aocxchange.exceptions
-import aocxchange.utils
-import aocxchange.checks
-import aocxchange.extensions
-
-import aocutils.types
-import aocutils.brep.shell_make
-import aocutils.brep.solid_make
-import aocutils.topology
+from OCCDataExchange.checks import check_importer_filename, check_exporter_filename, check_overwrite, check_shape
+from OCCDataExchange.extensions import iges_extensions
 
 logger = logging.getLogger(__name__)
 
@@ -35,10 +28,11 @@ class IgesImporter(object):
         Absolute filepath
 
     """
+
     def __init__(self, filename=None):
         logger.info("IgesImporter instantiated with filename : %s" % filename)
 
-        aocxchange.checks.check_importer_filename(filename, aocxchange.extensions.iges_extensions)
+        check_importer_filename(filename, iges_extensions)
 
         self._shapes = list()
         self.nb_shapes = 0
@@ -49,18 +43,18 @@ class IgesImporter(object):
 
     def read_file(self):
         """
-        Read the IGES file and stores the result in a list of OCC.TopoDS.TopoDS_Shape
+        Read the IGES file and stores the result in a list of TopoDS.TopoDS_Shape
 
         """
-        igescontrol_reader = OCC.IGESControl.IGESControl_Reader()
+        igescontrol_reader = IGESControl.IGESControl_Reader()
         status = igescontrol_reader.ReadFile(self._filename)
-        igescontrol_reader.PrintCheckLoad(False, OCC.IFSelect.IFSelect_ItemsByEntity)
+        igescontrol_reader.PrintCheckLoad(False, IFSelect.IFSelect_ItemsByEntity)
         nb_roots = igescontrol_reader.NbRootsForTransfer()
         logger.info("Nb roots for transfer : %i" % nb_roots)
 
-        if status == OCC.IFSelect.IFSelect_RetDone and nb_roots != 0:
+        if status == IFSelect.IFSelect_RetDone and nb_roots != 0:
 
-            igescontrol_reader.PrintCheckTransfer(False, OCC.IFSelect.IFSelect_ItemsByEntity)
+            igescontrol_reader.PrintCheckTransfer(False, IFSelect.IFSelect_ItemsByEntity)
             ok = igescontrol_reader.TransferRoots()
             logger.info("TransferRoots status : %i" % ok)
             self.nb_shapes = igescontrol_reader.NbShapes()
@@ -77,11 +71,11 @@ class IgesImporter(object):
                 else:
                     self._shapes.append(a_shape)
                     logger.debug("Appending a %s to list of shapes" %
-                                aocutils.types.topo_types_dict[a_shape.ShapeType()])
+                                 topo_lut[a_shape.ShapeType()])
         else:
-            msg = "Status is not OCC.IFSelect.IFSelect_RetDone or No root for transfer"
+            msg = "Status is not IFSelect.IFSelect_RetDone or No root for transfer"
             logger.error(msg)
-            raise aocxchange.exceptions.IgesFileReadException(msg)
+            raise ValueError(msg)
 
     @property
     def compound(self):
@@ -89,7 +83,7 @@ class IgesImporter(object):
 
         Returns
         -------
-        OCC.TopoDS.TopoDS_Compound
+        TopoDS.TopoDS_Compound
 
         Notes
         -----
@@ -101,8 +95,8 @@ class IgesImporter(object):
 
         """
         # Create a compound
-        compound = OCC.TopoDS.TopoDS_Compound()
-        brep_builder = OCC.BRep.BRep_Builder()
+        compound = TopoDS.TopoDS_Compound()
+        brep_builder = BRep.BRep_Builder()
         brep_builder.MakeCompound(compound)
         # Populate the compound
         for shape in self._shapes:
@@ -115,7 +109,7 @@ class IgesImporter(object):
 
         Returns
         -------
-        list[OCC.TopoDS.TopoDS_Shape]
+        list[TopoDS.TopoDS_Shape]
 
         """
         return self._shapes
@@ -130,6 +124,7 @@ class IgesExporter(object):
     format : ["5.1", "5.3"]
 
     """
+
     def __init__(self, filename, format="5.1"):
         logger.info("IgesExporter instantiated with filename : %s" % filename)
         logger.info("IgesExporter format : %s" % format)
@@ -137,10 +132,10 @@ class IgesExporter(object):
         if format not in ["5.1", "5.3"]:
             msg = "Unsupported IGES format"
             logger.error(msg)
-            raise aocxchange.exceptions.IgesUnknownFormatException(msg)
+            raise ValueError(msg)
 
-        aocxchange.checks.check_exporter_filename(filename, aocxchange.extensions.iges_extensions)
-        aocxchange.checks.check_overwrite(filename)
+        check_exporter_filename(filename, iges_extensions)
+        check_overwrite(filename)
 
         self._shapes = list()
         self._filename = filename
@@ -158,7 +153,7 @@ class IgesExporter(object):
         a_shape : TopoDS_Shape or subclass
 
         """
-        aocxchange.checks.check_shape(a_shape)  # raises an exception if the shape is not valid
+        check_shape(a_shape)  # raises an exception if the shape is not valid
         self._shapes.append(a_shape)
 
     def write_file(self):
@@ -169,17 +164,17 @@ class IgesExporter(object):
         bool
 
         """
-        OCC.IGESControl.IGESControl_Controller().Init()
-        iges_writer = OCC.IGESControl.IGESControl_Writer("write.iges.unit", self._brepmode)
+        IGESControl.IGESControl_Controller().Init()
+        iges_writer = IGESControl.IGESControl_Writer("write.iges.unit", self._brepmode)
         for shape in self._shapes:
             iges_writer.AddShape(shape)
         iges_writer.ComputeModel()
 
         write_status = iges_writer.Write(self._filename)
 
-        if write_status == OCC.IFSelect.IFSelect_RetDone:
+        if write_status == IFSelect.IFSelect_RetDone:
             logger.info("IGES file write successful.")
         else:
             msg = "An error occurred while writing the IGES file"
             logger.error(msg)
-            raise aocxchange.exceptions.IgesFileWriteException(msg)
+            raise ValueError(msg)

@@ -11,12 +11,10 @@ from __future__ import unicode_literals
 #
 # Read/write to/from CAD files"
 
-__name__ = "aocxchange"
+__name__ = "OCCDataExchange"
 __description__ = "Read/write to/from CAD files"
 
 __version__ = "0.3.0"
-__author__ = "Guillaume Florent"
-__author_email__ = "florentsailing@gmail.com"
+__author__ = "Jelle Feringa, Thomas Paviot, Guillaume Florent"
+__author_email__ = "jelleferinga@gmail.com"
 __license__ = 'GPL v3'
-__url__ = "https://github.com/floatingpointstack/aoc-xchange"
-__download_url__ = "https://github.com/floatingpointstack/aoc-xchange/releases/tag/" + __version__

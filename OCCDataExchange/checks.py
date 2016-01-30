@@ -1,16 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # coding: utf-8
 
 r"""Common checks to all exporters and importers"""
 
-import os.path
 import logging
+import os.path
 import warnings
 
-import OCC.TopoDS
+from OCC import TopoDS
 
-import aocxchange.exceptions
-import aocxchange.utils
+import OCCDataExchange
+from OCCDataExchange.utils import extract_file_extension
 
 logger = logging.getLogger(__name__)
 
@@ -31,9 +31,9 @@ def check_importer_filename(filename, allowed_extensions="*"):
 
     Raises
     ------
-    aocxchange.exceptions.FileNotFoundException
+    OCCDataExchange.exceptions.FileNotFoundException
         if the file does not exist
-    aocxchange.exceptions.IncompatibleFileFormatException
+    OCCDataExchange.exceptions.IncompatibleFileFormatException
         if the extension is not in allowed extensions
 
     """
@@ -41,7 +41,7 @@ def check_importer_filename(filename, allowed_extensions="*"):
     if not os.path.isfile(filename):
         msg = "Importer error : file %s not found." % filename
         logger.error(msg)
-        raise aocxchange.exceptions.FileNotFoundException(msg)
+        AssertionError(msg)
     else:
         logger.debug("File to import exists")
 
@@ -72,9 +72,9 @@ def check_exporter_filename(filename, allowed_extensions="*", create_directory=F
 
     Raises
     ------
-    aocxchange.exceptions.DirectoryNotFoundException
+    OCCDataExchange.exceptions.DirectoryNotFoundException
         if the directory from the filename does not exist
-    aocxchange.exceptions.IncompatibleFileFormatException
+    OCCDataExchange.exceptions.IncompatibleFileFormatException
         if the extension is not in allowed extensions
     OSError
         if create directory is True and the inexistent directory cannot be created
@@ -87,7 +87,7 @@ def check_exporter_filename(filename, allowed_extensions="*", create_directory=F
         else:
             msg = "Exporter error : Output directory does not exist"
             logger.error(msg)
-            raise aocxchange.exceptions.DirectoryNotFoundException(msg)
+            AssertionError(msg)
     else:
         logger.debug("Directory to export to exists")
 
@@ -100,10 +100,10 @@ def check_exporter_filename(filename, allowed_extensions="*", create_directory=F
 
 def _check_extension(filename, allowed_extensions):
     r"""Check that the extension extracted from filename is in allowed extensions"""
-    if aocxchange.utils.extract_file_extension(filename).lower() not in allowed_extensions:
+    if extract_file_extension(filename).lower() not in allowed_extensions:
         msg = "Accepted extensions are %s" % str(allowed_extensions)
         logger.error(msg)
-        raise aocxchange.exceptions.IncompatibleFileFormatException(msg)
+        AssertionError(msg)
     else:
         logger.debug("Extension is ok")
 
@@ -136,14 +136,14 @@ def check_shape(a_shape):
 
     Parameters
     ----------
-    a_shape : OCC.TopoDS.TopoDS_Shape or subclass
+    a_shape : TopoDS.TopoDS_Shape or subclass
 
     Returns
     -------
     bool
         True if all tests passed, raises an exception otherwise
     """
-    if not isinstance(a_shape, OCC.TopoDS.TopoDS_Shape) and not issubclass(a_shape.__class__, OCC.TopoDS.TopoDS_Shape):
+    if not isinstance(a_shape, TopoDS.TopoDS_Shape) and not issubclass(a_shape.__class__, TopoDS.TopoDS_Shape):
         msg = "Expecting a TopoDS_Shape or subclass, got a %s" % a_shape.__class__
         logger.error(msg)
         raise ValueError(msg)

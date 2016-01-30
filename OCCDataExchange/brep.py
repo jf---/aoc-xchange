@@ -1,21 +1,19 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # coding: utf-8
 
-r"""BREP module of aocxchange"""
+r"""BREP module of OCCDataExchange"""
 
 from __future__ import print_function
 
 import logging
 
-import OCC.BRep
-import OCC.BRepTools
-import OCC.Message
-import OCC.TopoDS
+from OCC import BRep
+from OCC import BRepTools
+from OCC import Message
+from OCC import TopoDS
 
-import aocxchange.exceptions
-import aocxchange.extensions
-import aocxchange.utils
-import aocxchange.checks
+from OCCDataExchange.checks import check_importer_filename, check_exporter_filename, check_overwrite, check_shape
+from OCCDataExchange.extensions import brep_extensions
 
 logger = logging.getLogger(__name__)
 
@@ -28,10 +26,11 @@ class BrepImporter(object):
     filename : str
 
     """
+
     def __init__(self, filename):
         logger.info("BrepImporter instantiated with filename : %s" % filename)
 
-        aocxchange.checks.check_importer_filename(filename, aocxchange.extensions.brep_extensions)
+        check_importer_filename(filename, brep_extensions)
         self._filename = filename
         self._shape = None
 
@@ -40,9 +39,9 @@ class BrepImporter(object):
 
     def read_file(self):
         r"""Read the BREP file and stores the result in a TopoDS_Shape"""
-        shape = OCC.TopoDS.TopoDS_Shape()
-        builder = OCC.BRep.BRep_Builder()
-        OCC.BRepTools.breptools_Read(shape, self._filename, builder)
+        shape = TopoDS.TopoDS_Shape()
+        builder = BRep.BRep_Builder()
+        BRepTools.breptools_Read(shape, self._filename, builder)
         self._shape = shape
 
     @property
@@ -61,11 +60,12 @@ class BrepExporter(object):
     ----------
     filename : str
     """
+
     def __init__(self, filename=None):
         logger.info("BrepExporter instantiated with filename : %s" % filename)
 
-        aocxchange.checks.check_exporter_filename(filename, aocxchange.extensions.brep_extensions)
-        aocxchange.checks.check_overwrite(filename)
+        check_exporter_filename(filename, brep_extensions)
+        check_overwrite(filename)
 
         self._shape = None  # only one shape can be exported
         self._filename = filename
@@ -79,12 +79,12 @@ class BrepExporter(object):
         a_shape
 
         """
-        aocxchange.checks.check_shape(a_shape)  # raises an exception if the shape is not valid
+        check_shape(a_shape)  # raises an exception if the shape is not valid
         self._shape = a_shape
 
     def write_file(self):
         r"""Write file"""
         logger.info("Writing brep : {cad_file}".format(cad_file=self._filename))
-        builder = OCC.Message.Handle_Message_ProgressIndicator()
-        OCC.BRepTools.breptools_Write(self._shape, self._filename, builder)
+        builder = Message.Handle_Message_ProgressIndicator()
+        BRepTools.breptools_Write(self._shape, self._filename, builder)
         logger.info("Wrote BREP file")

@@ -1,19 +1,17 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # coding: utf-8
 
-r"""STL module of aocxchange"""
+r"""STL module of OCCDataExchange"""
 
 from __future__ import print_function
 
 import logging
 
-import OCC.StlAPI
-import OCC.TopoDS
+from OCC import StlAPI
+from OCC import TopoDS
 
-import aocxchange.exceptions
-import aocxchange.extensions
-import aocxchange.utils
-import aocxchange.checks
+from OCCDataExchange.checks import check_importer_filename, check_exporter_filename, check_overwrite, check_shape
+from OCCDataExchange.extensions import stl_extensions
 
 logger = logging.getLogger(__name__)
 
@@ -26,10 +24,11 @@ class StlImporter(object):
     filename : str
 
     """
+
     def __init__(self, filename):
         logger.info("StlImporter instantiated with filename : %s" % filename)
 
-        aocxchange.checks.check_importer_filename(filename, aocxchange.extensions.stl_extensions)
+        check_importer_filename(filename, stl_extensions)
         self._filename = filename
         self._shape = None
 
@@ -38,8 +37,8 @@ class StlImporter(object):
 
     def read_file(self):
         r"""Read the STL file and stores the result in a TopoDS_Shape"""
-        stl_reader = OCC.StlAPI.StlAPI_Reader()
-        shape = OCC.TopoDS.TopoDS_Shape()
+        stl_reader = StlAPI.StlAPI_Reader()
+        shape = TopoDS.TopoDS_Shape()
         stl_reader.Read(shape, self._filename)
         self._shape = shape
 
@@ -61,12 +60,13 @@ class StlExporter(object):
     ascii_mode : bool
         (default is False)
     """
+
     def __init__(self, filename=None, ascii_mode=False):
         logger.info("StlExporter instantiated with filename : %s" % filename)
         logger.info("StlExporter ascii : %s" % str(ascii_mode))
 
-        aocxchange.checks.check_exporter_filename(filename, aocxchange.extensions.stl_extensions)
-        aocxchange.checks.check_overwrite(filename)
+        check_exporter_filename(filename, stl_extensions)
+        check_overwrite(filename)
 
         self._shape = None  # only one shape can be exported
         self._ascii_mode = ascii_mode
@@ -81,11 +81,11 @@ class StlExporter(object):
         a_shape
 
         """
-        aocxchange.checks.check_shape(a_shape)  # raises an exception if the shape is not valid
+        check_shape(a_shape)  # raises an exception if the shape is not valid
         self._shape = a_shape
 
     def write_file(self):
         r"""Write file"""
-        stl_writer = OCC.StlAPI.StlAPI_Writer()
+        stl_writer = StlAPI.StlAPI_Writer()
         stl_writer.Write(self._shape, self._filename, self._ascii_mode)
         logger.info("Wrote STL file")

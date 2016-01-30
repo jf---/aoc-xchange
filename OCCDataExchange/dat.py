@@ -1,7 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # coding: utf-8
 
-r"""dat module of aocxchange
+r"""dat module of OCCDataExchange
 
 Summary
 -------
@@ -12,8 +12,8 @@ Deals with .dat files, mostly used to define 2D foil sections
 
 import logging
 
-import aocxchange.checks
-import aocxchange.extensions
+from OCCDataExchange.checks import check_importer_filename
+from OCCDataExchange.extensions import dat_extensions
 
 logger = logging.getLogger(__name__)
 
@@ -31,9 +31,10 @@ class DatImporter(object):
         If True, the first line of the .dat file is skipped
 
     """
+
     def __init__(self, filename, as_3d=False, skip_first_line=False):
 
-        aocxchange.checks.check_importer_filename(filename, aocxchange.extensions.dat_extensions)
+        check_importer_filename(filename, dat_extensions)
         self._filename = filename
         self._as_3d = as_3d
         self._skip_first_line = skip_first_line

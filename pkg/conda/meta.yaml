@@ -1,0 +1,24 @@
+package:
+  name: OCCDataExchange
+  version: "0.3.0"
+
+source:
+  git_rev: 0.3.0
+  git_url: https://github.com/floatingpointstack/OCCDataExchange.git
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+    - pythonocc-core
+    - OCCUtils
+
+test:
+  imports:
+    - OCCDataExchange
+
+about:
+  home: https://github.com/floatingpointstack/OCCDataExchange
+  license: GPL

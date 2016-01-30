@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # coding: utf-8
 
 r"""Importing multiple shapes from IGES"""
@@ -7,22 +7,19 @@ from __future__ import print_function
 
 import logging
 
-import OCC.Display.SimpleGui
+from OCC.Display import SimpleGui
+from OCCUtils import Topo
 
-import aocutils.display.topology
-import aocutils.display.defaults
-
-import aocxchange.iges
-import aocxchange.utils
+from OCCDataExchange.iges import IgesImporter
+from OCCDataExchange import path_from_file
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s :: %(levelname)6s :: %(module)20s :: %(lineno)3d :: %(message)s')
-backend = aocutils.display.defaults.backend
-display, start_display, add_menu, add_function_to_menu = OCC.Display.SimpleGui.init_display(backend)
+display, start_display, add_menu, add_function_to_menu = SimpleGui.init_display()
 
 # my_iges_importer = occaddons.dataexchange.iges.IgesImporter("../../data/IGES/splines.igs")
-filename = aocxchange.utils.path_from_file(__file__, "./models_in/iges/2_boxes.igs")
-iges_importer = aocxchange.iges.IgesImporter(filename)
+filename = path_from_file(__file__, "./models_in/iges/2_boxes.igs")
+iges_importer = IgesImporter(filename)
 
 the_shapes = iges_importer.shapes
 
@@ -32,7 +29,9 @@ print(len(iges_importer.shapes))  # 13
 # display.DisplayShape(iges_importer.compound)
 
 # there are no shells or solids in the compound (IGES specific)
-aocutils.display.topology.faces(display, iges_importer.compound)
+
+for fc in Topo(iges_importer.compound).faces():
+    display.DisplayShape(fc)
 
 display.FitAll()
 display.View_Iso()

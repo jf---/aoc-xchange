@@ -36,7 +36,7 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-import aocxchange
+import OCCDataExchange
 
 here = path.abspath(path.dirname(__file__))
 
@@ -46,26 +46,26 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 
 setup(
-    name=aocxchange.__name__,
+    name=OCCDataExchange.__name__,
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version=aocxchange.__version__,
+    version=OCCDataExchange.__version__,
 
-    description=aocxchange.__description__,
+    description=OCCDataExchange.__description__,
     long_description=long_description,
 
     # The project's main homepage.
-    url=aocxchange.__url__,
-    download_url=aocxchange.__download_url__,
+    url=OCCDataExchange.__url__,
+    download_url=OCCDataExchange.__download_url__,
 
     # Author details
-    author=aocxchange.__author__,
-    author_email=aocxchange.__author_email__,
+    author=OCCDataExchange.__author__,
+    author_email=OCCDataExchange.__author_email__,
 
     # Choose your license
-    license=aocxchange.__license__,
+    license=OCCDataExchange.__license__,
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -97,7 +97,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=['aocxchange'],
+    packages=['OCCDataExchange'],
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
@@ -108,7 +108,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     # install_requires=['OCC', 'scipy', 'wx'],
-    install_requires=['aocutils'],  # OCC, scipy and wx cannot be installed via pip
+    install_requires=['OCCUtils'],  # OCC, scipy and wx cannot be installed via pip
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
