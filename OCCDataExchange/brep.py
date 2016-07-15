@@ -2,7 +2,7 @@
 # coding: utf-8
 
 r"""BREP module of OCCDataExchange"""
-
+from __future__ import absolute_import
 from __future__ import print_function
 
 import logging
@@ -12,7 +12,7 @@ from OCC import BRepTools
 from OCC import Message
 from OCC import TopoDS
 
-from OCCDataExchange.checks import check_importer_filename, check_exporter_filename, check_overwrite, check_shape
+from OCCDataExchange.checks import check_importer_filename, check_exporter_filename, check_shape, check_overwrite
 from OCCDataExchange.extensions import brep_extensions
 
 logger = logging.getLogger(__name__)
@@ -63,7 +63,6 @@ class BrepExporter(object):
 
     def __init__(self, filename=None):
         logger.info("BrepExporter instantiated with filename : %s" % filename)
-
         check_exporter_filename(filename, brep_extensions)
         check_overwrite(filename)
 

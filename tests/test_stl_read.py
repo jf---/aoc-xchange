@@ -18,13 +18,13 @@ logging.basicConfig(level=logging.DEBUG,
 
 def test_iges_importer_wrong_path():
     r"""Wrong filename"""
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         StlImporter("C:/stupid-filename.bad_extension")
 
 
 def test_stl_importer_wrong_extension():
     r"""wrong file format (i.e. trying to read a step file with iges importer)"""
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         StlImporter(path_from_file(__file__, "./models_in/aube_pleine.stp"))
 
 
@@ -47,21 +47,21 @@ def test_stl_importer_happy_topology():
 
     # binary STL
     importer = StlImporter(path_from_file(__file__, "./models_in/box_binary.stl"))
-    topo = Topo(importer.shape, return_iter=False)
+    topo = Topo(importer.shape)
     # assert len(topo.solids()) == 1
-    assert len(topo.shells()) == 1
-    assert topo.shells()[0].Closed() is True  # direct method on TopoDS_Shell
-    assert len(topo.faces()) == 108
-    assert len(topo.edges()) == 162
+    assert len([i for i in topo.shells()]) == 1
+    assert topo.shells().next().Closed() is True  # direct method on TopoDS_Shell
+    assert len([i for i in topo.faces()]) == 108
+    assert len([i for i in topo.edges()]) == 162
 
     # ascii STL
     importer = StlImporter(path_from_file(__file__, "./models_in/box_ascii.stl"))
-    topo = Topo(importer.shape, return_iter=False)
+    topo = Topo(importer.shape)
     # assert len(topo.solids) == 1
-    assert len(topo.shells()) == 1
-    assert topo.shells()[0].Closed() is True
-    assert len(topo.faces()) == 108
-    assert len(topo.edges()) == 162
+    assert len([i for i in topo.shells()]) == 1
+    assert topo.shells().next().Closed() is True
+    assert len([i for i in topo.faces()]) == 108
+    assert len([i for i in topo.edges()]) == 162
 
 
 def test_stl_importer_2_boxes():
@@ -75,21 +75,21 @@ def test_stl_importer_2_boxes():
     # binary STL
     importer = StlImporter(path_from_file(__file__, "./models_in/2_boxes_binary.stl"))
 
-    topo = Topo(importer.shape, return_iter=False)
-    # assert len(topo.solids) == 2
-    assert len(topo.shells()) == 2
-    assert topo.shells()[0].Closed() is True
-    assert topo.shells()[1].Closed() is True
+    topo = Topo(importer.shape)
+    assert len([i for i in topo.shells()]) == 2
+    assert topo.shells().next().Closed() is True
+    assert [i for i in topo.shells()][1].Closed() is True
     assert topo.number_of_faces() == 108 * 2
     assert topo.number_of_edges() == 162 * 2
 
     # ascii STL
     importer = StlImporter(path_from_file(__file__, "./models_in/2_boxes_ascii.stl"))
 
-    topo = Topo(importer.shape, return_iter=False)
-    # assert len(topo.solids()) == 2
-    assert len(topo.shells()) == 2
-    assert topo.shells()[0].Closed() is True
-    assert topo.shells()[1].Closed() is True
+    topo = Topo(importer.shape)
+    assert len([i for i in topo.shells()]) == 2
+    assert topo.shells().next().Closed() is True
+    assert [i for i in topo.shells()][1].Closed() is True
     assert topo.number_of_faces() == 108 * 2
     assert topo.number_of_edges() == 162 * 2
+
+

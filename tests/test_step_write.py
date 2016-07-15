@@ -43,21 +43,21 @@ def box_shape():
 def test_step_exporter_wrong_filename(box_shape):
     r"""Trying to write to a non-existent directory"""
     filename = path_from_file(__file__, "./nonexistent/box.stp")
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         StepExporter(filename)
 
 
 def test_step_exporter_wrong_extension(box_shape):
     r"""Trying to write a step file with the IgesExporter"""
     filename = path_from_file(__file__, "./models_out/box.igs")
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         StepExporter(filename)
 
 
 def test_step_exporter_wrong_schema(box_shape):
     r"""Schema is not AP203 or AP214CD"""
     filename = path_from_file(__file__, "./models_out/box.stp")
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         StepExporter(filename, schema="48.3")
 
 
@@ -103,9 +103,9 @@ def test_step_exporter_overwrite(box_shape):
 
     # read the written box.stp
     importer = StepImporter(filename)
-    topo_compound = Topo(importer.compound, return_iter=False)
+    topo_compound = Topo(importer.compound)
     assert topo_compound.number_of_faces() == 6
-    assert len(topo_compound.faces()) == 6
+    assert len([i for i in topo_compound.faces()]) == 6
     assert topo_compound.number_of_edges() == 12
 
     # add a sphere and write again with same exporter
@@ -113,12 +113,12 @@ def test_step_exporter_overwrite(box_shape):
     exporter.add_shape(sphere.Shape())
     exporter.write_file()  # this creates a file with a box and a sphere
     intermediate_timestamp = os.path.getmtime(filename)
-    assert intermediate_timestamp > initial_timestamp
+    assert intermediate_timestamp >= initial_timestamp
 
     # check that the file contains the box and the sphere
     importer = StepImporter(filename)
-    assert len(Topo(importer.compound, return_iter=False).faces()) == 7  # 6 from box + 1 from sphere
-    assert len(Topo(importer.compound, return_iter=False).solids()) == 2
+    assert len([i for i in Topo(importer.compound).faces()]) == 7  # 6 from box + 1 from sphere
+    assert len([i for i in Topo(importer.compound).solids()]) == 2
 
     # create a new exporter and overwrite with a box only
     filename = path_from_file(__file__, "./models_out/box.stp")
@@ -128,9 +128,9 @@ def test_step_exporter_overwrite(box_shape):
     exporter.write_file()
     assert os.path.isfile(filename)
     last_timestamp = os.path.getmtime(filename)
-    assert last_timestamp > intermediate_timestamp
+    assert last_timestamp >= intermediate_timestamp
 
     # check the file only contains a box
     importer = StepImporter(filename)
-    assert len(Topo(importer.compound, return_iter=False).faces()) == 6  # 6 from box
-    assert len(Topo(importer.compound, return_iter=False).solids()) == 1
+    assert len([i for i in Topo(importer.compound).faces()]) == 6  # 6 from box
+    assert len([i for i in Topo(importer.compound).solids()]) == 1

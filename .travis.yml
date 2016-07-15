@@ -3,7 +3,6 @@ dist: trusty
 
 python:
   - "2.7"
-  # - "3.4" pythonocc conda install not possible for 3.* yet
 
 # Setup anaconda
 before_install:
@@ -31,11 +30,7 @@ install:
   - conda install -c https://conda.anaconda.org/dlr-sc pythonocc-core
   # - pip install -r requirements.txt
   - pip install pytest pytest-cov
-  - pip install coveralls
   - python setup.py install
 
 script:
   - py.test
-
-after_success:
-  coveralls --config_file .coveragerc

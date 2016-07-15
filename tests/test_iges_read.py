@@ -18,13 +18,13 @@ logging.basicConfig(level=logging.DEBUG,
 
 def test_iges_importer_wrong_path():
     r"""Wrong filename"""
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         IgesImporter("C:/stupid-filename.bad_extension")
 
 
 def test_iges_importer_wrong_extension():
     r"""wrong file format (i.e. trying to read a step file with iges importer)"""
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         IgesImporter(path_from_file(__file__, "./models_in/aube_pleine.stp"))
 
 
@@ -47,7 +47,7 @@ def test_iges_importer_happy_topology():
     r"""import iges file containing a box and test topology"""
     importer = IgesImporter(path_from_file(__file__, "./models_in/box.igs"))
 
-    topo = Topo(importer.compound, return_iter=False)
+    topo = Topo(importer.compound)
     assert topo.number_of_faces() == 6
     assert topo.number_of_edges() == 24  # 12 edges * 2 possible orientations ?
 
@@ -61,6 +61,6 @@ def test_iges_importer_2_boxes():
 
     """
     importer = IgesImporter(path_from_file(__file__, "./models_in/2_boxes.igs"))
-    topo = Topo(importer.compound, return_iter=False)
+    topo = Topo(importer.compound)
     assert topo.number_of_faces() == 6 * 2
     assert topo.number_of_edges() == 24 * 2

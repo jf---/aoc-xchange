@@ -1,2 +1,4 @@
 # OCC
 OCCUtils
+qtpy
+pyqt5

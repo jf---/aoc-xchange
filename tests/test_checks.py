@@ -15,13 +15,13 @@ from OCCDataExchange.utils import path_from_file
 
 def test_check_importer_filename_inexistent_file():
     r"""Inexistent file test for check_importer_filename()"""
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         check_importer_filename(path_from_file(__file__, "./models_out/dummy.igs"))
 
 
 def test_check_importer_filename_wrong_extension():
     r"""Wrong extension test for check_importer_filename()"""
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         check_importer_filename(path_from_file(__file__, "./models_in/box.igs"),
                                 ["step"])
 
@@ -84,4 +84,6 @@ def test_check_shape():
     check_shape(shape)
 
     # a subclass of shape should not raise any exception
-    check_shape(Topo(shape, return_iter=False).edges()[0])
+    check_shape(Topo(shape).edges().next())
+
+

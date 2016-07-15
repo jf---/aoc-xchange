@@ -57,8 +57,8 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url=OCCDataExchange.__url__,
-    download_url=OCCDataExchange.__download_url__,
+    # url=OCCDataExchange.__url__,
+    # download_url=OCCDataExchange.__download_url__,
 
     # Author details
     author=OCCDataExchange.__author__,
@@ -108,7 +108,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     # install_requires=['OCC', 'scipy', 'wx'],
-    install_requires=['OCCUtils'],  # OCC, scipy and wx cannot be installed via pip
+    #install_requires=['OCCUtils'],  # OCC, scipy and wx cannot be installed via pip
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,

@@ -94,10 +94,10 @@ class StepOcafImporter(object):
 
         # Get root assembly
         doc = h_doc.GetObject()
-        h_shape_tool = XCAFDoc.XCAFDoc_DocumentTool().ShapeTool(doc.Main())
-        color_tool = XCAFDoc.XCAFDoc_DocumentTool().ColorTool(doc.Main())
-        layer_tool = XCAFDoc.XCAFDoc_DocumentTool().LayerTool(doc.Main())
-        l_materials = XCAFDoc.XCAFDoc_DocumentTool().MaterialTool(doc.Main())
+        h_shape_tool = XCAFDoc.XCAFDoc_DocumentTool().ShapeTool(doc.Main()).GetObject()
+        color_tool = XCAFDoc.XCAFDoc_DocumentTool().ColorTool(doc.Main()).GetObject()
+        layer_tool = XCAFDoc.XCAFDoc_DocumentTool().LayerTool(doc.Main()).GetObject()
+        l_materials = XCAFDoc.XCAFDoc_DocumentTool().MaterialTool(doc.Main()).GetObject()
 
         step_reader = STEPCAFControl.STEPCAFControl_Reader()
         step_reader.SetColorMode(True)
@@ -105,17 +105,19 @@ class StepOcafImporter(object):
         step_reader.SetNameMode(True)
         step_reader.SetMatMode(True)
 
-        status = step_reader.ReadFile(str(self.filename))
+        status = step_reader.ReadFile(self.filename)
 
         if status == IFSelect.IFSelect_RetDone:
             logger.info("Transfer doc to STEPCAFControl_Reader")
             step_reader.Transfer(doc.GetHandle())
+        else:
+            raise ValueError("could not read {}".format(self.filename))
 
         labels = TDF.TDF_LabelSequence()
         color_labels = TDF.TDF_LabelSequence()
         # TopoDS_Shape a_shape;
-        shape_tool = h_shape_tool.GetObject()
-        h_shape_tool.GetObject().GetFreeShapes(labels)
+        h_shape_tool.GetFreeShapes(labels)
+        h_shape_tool.GetShapes(labels)
 
         logger.info('Number of shapes at root :%i' % labels.Length())
 
@@ -136,13 +138,13 @@ class StepOcafImporter(object):
             # print i
             label = labels.Value(i + 1)
             logger.debug("Label : %s" % label)
-            a_shape = h_shape_tool.GetObject().GetShape(labels.Value(i + 1))
+            a_shape = h_shape_tool.GetShape(labels.Value(i + 1))
 
             # string_seq = TColStd.TColStd_HSequenceOfExtendedString()
             # string_seq is an TColStd.TColStd_HSequenceOfExtendedString
-            string_seq = layer_tool.GetObject().GetLayers(a_shape)
+            string_seq = layer_tool.GetLayers(a_shape)
             color = Quantity.Quantity_Color()
-            c = color_tool.GetObject().GetColor(a_shape, XCAFDoc.XCAFDoc_ColorSurf, color)
+            c = color_tool.GetColor(a_shape, XCAFDoc.XCAFDoc_ColorSurf, color)
 
             logger.info("The shape type is : %i" % a_shape.ShapeType())
             if a_shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
@@ -182,18 +184,14 @@ class StepOcafExporter(object):
 
         # Get root assembly
         doc = h_doc.GetObject()
-        h_shape_tool = XCAFDoc.XCAFDoc_DocumentTool().ShapeTool(doc.Main())
-        l_colors = XCAFDoc.XCAFDoc_DocumentTool().ColorTool(doc.Main())
-        l_layers = XCAFDoc.XCAFDoc_DocumentTool().LayerTool(doc.Main())
+        self.shape_tool = XCAFDoc.XCAFDoc_DocumentTool().ShapeTool(doc.Main()).GetObject()
+        self.colors = XCAFDoc.XCAFDoc_DocumentTool().ColorTool(doc.Main()).GetObject()
+        self.layers = XCAFDoc.XCAFDoc_DocumentTool().LayerTool(doc.Main()).GetObject()
         labels = TDF.TDF_LabelSequence()
         color_labels = TDF.TDF_LabelSequence()
         # TopoDS_Shape aShape;
 
-        self.shape_tool = h_shape_tool.GetObject()
         self.top_label = self.shape_tool.NewShape()
-        self.colors = l_colors.GetObject()
-        self.layers = l_layers.GetObject()
-
         self.current_color = Quantity.Quantity_Color(Quantity.Quantity_NOC_RED)
         self.current_layer = self.layers.AddLayer(TCollection.TCollection_ExtendedString(layer_name))
         self.layer_names = {}

@@ -3,20 +3,11 @@
 OCCDataExchange
 ===========
 
-.. image:: http://img.shields.io/badge/Status-development-ff3300.svg
-   :alt: Development
-.. image:: https://img.shields.io/pypi/dm/OCCDataExchange.svg
-   :alt: Downloads
-.. image:: https://travis-ci.org/floatingpointstack/OCCDataExchange.svg
+.. image:: https://travis-ci.org/tpaviot/OCCDataExchange.svg
    :alt: Build Status
-.. image:: https://coveralls.io/repos/floatingpointstack/OCCDataExchange/badge.svg?branch=master&service=github
-   :alt: Coverage Status
 .. image:: http://img.shields.io/badge/license-GPL_v3-blue.svg
    :target: https://www.gnu.org/copyleft/gpl.html
    :alt: GPL v3
-.. image:: http://img.shields.io/badge/Python-2.7_3.*-ff3366.svg
-   :target: https://www.python.org/downloads/
-   :alt: Python 2.7 3.*
 
 The **OCCDataExchange** project provides a Python package named **OCCDataExchange** to read and write
 from/to IGES, STEP, BREP, and STL files using `PythonOCC <http://www.pythonorg/>`_.
@@ -50,7 +41,7 @@ install
 
 .. code-block:: bash
 
-  pip install OCCDataExchange
+  conda install OCCDataExchange
 
 Dependencies
 ~~~~~~~~~~~~
@@ -66,7 +57,7 @@ Please see the table below for instructions on how to satisfy the requirements.
 +----------+----------+----------------------------------------------------------------------------+
 | OCCUtils | latest   | `pip install OCCUtils --upgrade`                                           |
 +----------+----------+----------------------------------------------------------------------------+
-| wx       | >=2.8    | See wxpython.org for instructions                                          |
+| pyqt5       | >=5.6 | See anaconda.org for instructions                                          |
 +----------+----------+----------------------------------------------------------------------------+
 
 Goal
@@ -82,25 +73,25 @@ occdataexchange version and target PythonOCC version
 +--------------------+-------------------+
 | OCCDataExchange version | PythonOCC version |
 +====================+===================+
-| 0.1.*              | 0.16.2            |
+| 0.4.*              | 0.17.0            |
 +--------------------+-------------------+
 
 Examples
 --------
 
-The examples are in the *examples* folder at the Github repository (https://github.com/floatingpointstack/OCCDataExchange).
+The examples are in the *examples* folder at the Github repository (https://github.com/tpaviot/OCCDataExchange).
 
 The wx backend (wxPython) backend is used for the examples that display a UI.
 You may easily change this behaviour to use pyqt4 or PySide by changing the backend in the call to init_display().
 
-.. image:: https://raw.githubusercontent.com/floatingpointstack/OCCDataExchange/master/img/submarine.jpg
+.. image:: https://raw.githubusercontent.com/tpaviot/OCCDataExchange/master/img/submarine.jpg
    :alt: submarine from STL
 
-.. image:: https://raw.githubusercontent.com/floatingpointstack/OCCDataExchange/master/img/step_import_wing_structure_solids.jpg
+.. image:: https://raw.githubusercontent.com/tpaviot/OCCDataExchange/master/img/step_import_wing_structure_solids.jpg
    :alt: wing structure solids from STEP
 
-.. image:: https://raw.githubusercontent.com/floatingpointstack/OCCDataExchange/master/img/vor70_cockpit.jpg
+.. image:: https://raw.githubusercontent.com/tpaviot/OCCDataExchange/master/img/vor70_cockpit.jpg
    :alt: VOR 70 cockpit from STEP
 
-.. image:: https://raw.githubusercontent.com/floatingpointstack/OCCDataExchange/master/img/step_import_aube_solids_and_edges.jpg
+.. image:: https://raw.githubusercontent.com/tpaviot/OCCDataExchange/master/img/step_import_aube_solids_and_edges.jpg
    :alt: Aube solids and edges from STEP

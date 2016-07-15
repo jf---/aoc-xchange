@@ -6,9 +6,8 @@ r"""STEP file reading tests"""
 import logging
 
 import pytest
-from OCC import TopoDS
-from OCC import BRepPrimAPI
 from OCC import TopAbs
+from OCC import TopoDS
 from OCCUtils import Topo
 
 from OCCDataExchange.step import StepImporter
@@ -20,13 +19,13 @@ logging.basicConfig(level=logging.DEBUG,
 
 def test_step_importer_wrong_path():
     r"""Wrong filename"""
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         StepImporter("C:/stupid-filename.bad_extension")
 
 
 def test_step_importer_wrong_extension():
     r"""wrong file format (i.e. trying to read a iges file with step importer)"""
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         filename = path_from_file(__file__, "./models_in/aube_pleine.iges")
         StepImporter(filename)
 
@@ -73,6 +72,3 @@ def test_step_importer_2_boxes():
     assert topo.number_of_comp_solids() == 0
     assert topo.number_of_solids() == 2
     assert topo.number_of_shells() == 2
-
-
-

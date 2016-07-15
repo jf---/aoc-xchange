@@ -48,14 +48,14 @@ def box_shape():
 def test_stl_exporter_wrong_filename(box_shape):
     r"""Trying to write to a non-existent directory"""
     filename = path_from_file(__file__, "./nonexistent/box.stl")
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         StlExporter(filename)
 
 
 def test_stl_exporter_wrong_extension(box_shape):
     r"""Trying to write a step file with the IgesExporter"""
     filename = path_from_file(__file__, "./models_out/box.step")
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         StlExporter(filename)
 
 
@@ -101,7 +101,7 @@ def test_stl_exporter_overwrite(box_shape):
     # read the written box.stl
     importer = StlImporter(filename)
     topo = Topo(importer.shape)
-    assert topo.number_of_shells == 1
+    assert topo.number_of_shells() == 1
 
     # set a sphere and write again with same exporter
     sphere = BRepPrimAPI.BRepPrimAPI_MakeSphere(10)
@@ -111,7 +111,7 @@ def test_stl_exporter_overwrite(box_shape):
     # check that the file contains the sphere only
     importer = StlImporter(filename)
     topo = Topo(importer.shape)
-    assert topo.number_of_shells == 1
+    assert topo.number_of_shells() == 1
 
     # create a new exporter and overwrite with a box only
     filename = path_from_file(__file__, "./models_out/box.stl")
@@ -124,4 +124,4 @@ def test_stl_exporter_overwrite(box_shape):
     # check the file only contains a box
     importer = StlImporter(filename)
     topo = Topo(importer.shape)
-    assert topo.number_of_shells == 1
+    assert topo.number_of_shells() == 1

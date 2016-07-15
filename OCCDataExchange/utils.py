@@ -8,11 +8,6 @@ from __future__ import print_function
 import logging
 import os
 
-from OCCDataExchange.brep import BrepImporter, BrepExporter
-from OCCDataExchange.iges import IgesImporter, IgesExporter
-from OCCDataExchange.step import StepImporter, StepExporter
-from OCCDataExchange.stl import StlImporter, StlExporter
-
 logger = logging.getLogger(__name__)
 
 
@@ -58,9 +53,15 @@ def extract_file_extension(filename):
 
 def shape_to_file(shape, pth, filename, format='iges'):
     """write a Shape to a .iges .brep .stl or .step file"""
+
+    from OCCDataExchange.brep import BrepExporter
+    from OCCDataExchange.iges import IgesExporter
+    from OCCDataExchange.step import StepExporter
+    from OCCDataExchange.stl import StlExporter
+
     _pth = os.path.join(pth, filename)
     assert not os.path.isdir(_pth), 'wrong path, filename'
-    _file = "%s.%s" % (_pth, format)
+    _file = str("%s.%s" % (_pth, format))
 
     _formats = ['iges', 'igs', 'step', 'stp', 'brep', 'stl']
     assert format in _formats, '%s is not a readable format, should be one of %s ' % (format, _formats)
@@ -95,21 +96,27 @@ def shape_to_file(shape, pth, filename, format='iges'):
 
 def file_to_shape(pth):
     '''get a Shape from an .iges or .step file'''
+
+    from OCCDataExchange.brep import BrepImporter
+    from OCCDataExchange.iges import IgesImporter
+    from OCCDataExchange.step import StepImporter
+    from OCCDataExchange.stl import StlImporter
+
     assert os.path.isfile(pth), '%s is not a valid file' % (pth)
     ext = os.path.splitext(pth)[1].lower()
     assert ext in ['.iges', '.igs', '.stp', '.step', '.brep', '.stl'], '%s is not an readable format' % (ext)
 
     if ext in ['.iges', '.igs']:
         reader = IgesImporter(pth)
-        return reader.shapes
+        return reader.compound
 
     elif ext in ['.step', '.stp']:
         reader = StepImporter(pth)
-        return reader.shapes
+        return reader.compound
 
     elif ext == '.brep':
         reader = BrepImporter(pth)
-        return reader.shape
+        return reader.compound
 
     elif ext == '.stl':
         reader = StlImporter(pth)

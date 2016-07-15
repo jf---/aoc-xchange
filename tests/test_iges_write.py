@@ -44,14 +44,14 @@ def box_shape():
 def test_iges_exporter_wrong_filename(box_shape):
     r"""Trying to write to a non-existent directory"""
     filename = path_from_file(__file__, "./nonexistent/box.igs")
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         IgesExporter(filename)
 
 
 def test_iges_exporter_wrong_extension(box_shape):
     r"""Trying to write a step file with the IgesExporter"""
     filename = path_from_file(__file__, "./models_out/box.step")
-    with pytest.raises(ValueError):
+    with pytest.raises(AssertionError):
         IgesExporter(filename)
 
 
@@ -103,8 +103,8 @@ def test_iges_exporter_overwrite(box_shape):
     # read the written box.igs
     importer = IgesImporter(filename)
     topo_compound = Topo(importer.compound)
-    assert topo_compound.number_of_faces == 6
-    assert topo_compound.number_of_edges == 24
+    assert topo_compound.number_of_faces() == 6
+    assert topo_compound.number_of_edges() == 24
 
     # add a sphere and write again with same exporter
     sphere = BRepPrimAPI.BRepPrimAPI_MakeSphere(10)
@@ -114,7 +114,7 @@ def test_iges_exporter_overwrite(box_shape):
     # check that the file contains the box and the sphere
     importer = IgesImporter(filename)
     topo_compound = Topo(importer.compound)
-    assert topo_compound.number_of_faces == 7  # 6 from box + 1 from sphere
+    assert topo_compound.number_of_faces() == 7  # 6 from box + 1 from sphere
 
     # create a new exporter and overwrite with a box only
     filename = path_from_file(__file__, "./models_out/box.igs")
@@ -127,4 +127,4 @@ def test_iges_exporter_overwrite(box_shape):
     # check the file only contains a box
     importer = IgesImporter(filename)
     topo_compound = Topo(importer.compound)
-    assert topo_compound.number_of_faces == 6  # 6 from box
+    assert topo_compound.number_of_faces() == 6  # 6 from box

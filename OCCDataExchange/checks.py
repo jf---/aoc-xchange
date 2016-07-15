@@ -8,8 +8,6 @@ import os.path
 import warnings
 
 from OCC import TopoDS
-
-import OCCDataExchange
 from OCCDataExchange.utils import extract_file_extension
 
 logger = logging.getLogger(__name__)
@@ -41,7 +39,7 @@ def check_importer_filename(filename, allowed_extensions="*"):
     if not os.path.isfile(filename):
         msg = "Importer error : file %s not found." % filename
         logger.error(msg)
-        AssertionError(msg)
+        raise AssertionError(msg)
     else:
         logger.debug("File to import exists")
 
@@ -87,7 +85,7 @@ def check_exporter_filename(filename, allowed_extensions="*", create_directory=F
         else:
             msg = "Exporter error : Output directory does not exist"
             logger.error(msg)
-            AssertionError(msg)
+            raise AssertionError(msg)
     else:
         logger.debug("Directory to export to exists")
 
@@ -103,7 +101,7 @@ def _check_extension(filename, allowed_extensions):
     if extract_file_extension(filename).lower() not in allowed_extensions:
         msg = "Accepted extensions are %s" % str(allowed_extensions)
         logger.error(msg)
-        AssertionError(msg)
+        raise AssertionError(msg)
     else:
         logger.debug("Extension is ok")
 
