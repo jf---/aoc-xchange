@@ -29,8 +29,8 @@ my_step_exporter.write_file()
 
 # Read the exported STEP file back
 my_step_importer = StepOcafImporter("./models_out/result_export_multi_ocaf.stp")
-# my_step_importer = OCCDataExchange.step_ocaf.StepOcafImport("./models_in/66m.stp")
-# my_step_importer.read_file()
+# step = OCCDataExchange.step_ocaf.StepOcafImport("./models_in/66m.stp")
+# step.read_file()
 the_shapes = my_step_importer.shapes
 the_colors = my_step_importer.colors
 the_layers = my_step_importer.layers
